@@ -1,7 +1,7 @@
-import express from "express";
+import express, { Router } from "express";
 import books from "./books";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 router.get("/", (req, res) => {
     res.json({

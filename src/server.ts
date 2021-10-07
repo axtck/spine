@@ -1,11 +1,19 @@
-import express from "express";
-import envv from "./config/envConfig";
+// app
+import express, { Application } from "express";
+const app: Application = express();
+
+// .env
+import * as dotenv from "dotenv";
+dotenv.config();
+import penv from "./config/penv";
+Object.entries(penv).map(([k, v]) => console.log(`${k}: \t\t\t${v}`));
+
+// api
 import api from "./api";
+
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
-
-const app = express();
 
 // basic middleware
 app.use(morgan("short"));
@@ -21,7 +29,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1", api);
 
-const port = envv.port || 3001;
+const port = penv.port || 3001;
 app.listen(port, () => {
     console.log(`Listening on ${port}.`);
 });
