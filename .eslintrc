@@ -12,6 +12,10 @@
     "rules": {
         "comma-dangle": "warn",
         "no-underscore-dangle": "warn",
-        "no-else-return": "warn"
+        "no-else-return": "warn",
+        "quotes": [
+            "warn",
+            "double"
+        ]
     }
 }

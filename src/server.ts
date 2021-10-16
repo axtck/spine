@@ -2,11 +2,14 @@
 import express, { Application } from "express";
 const app: Application = express();
 
+// logging
+import { Logger } from "./core/Logger";
+const logger = new Logger();
+
 // .env
-import * as dotenv from "dotenv";
-dotenv.config();
 import penv from "./config/penv";
-Object.entries(penv).map(([k, v]) => console.log(`${k}: \t\t\t${v}`));
+
+Object.entries(penv).map(([k, v]) => logger.info(`${k}: \t\t\t${v}`));
 
 // api
 import api from "./api";
@@ -16,7 +19,7 @@ import helmet from "helmet";
 import cors from "cors";
 
 // basic middleware
-app.use(morgan("short"));
+app.use(morgan("dev"));
 app.use(helmet());
 app.use(cors());
 app.use(express.json());

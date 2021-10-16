@@ -1,17 +1,9 @@
-import { ILogger } from './types';
+import { ILogger } from "./types";
 
-interface IController {
-    logger: ILogger;
-}
-
-class Controller implements IController {
-    private readonly _logger: ILogger;
+export class Controller {
+    public logger: ILogger;
     constructor(logger: ILogger) {
-        this._logger = logger;
-    }
-
-    public get logger(): ILogger {
-        return this._logger;
+        this.logger = logger;
     }
 }
 
