@@ -7,3 +7,7 @@ export interface ILogger {
     http(message: LogMessageTypes): void;
     debug(message: LogMessageTypes): void;
 }
+
+export interface IDatabase {
+    logger: ILogger;
+}

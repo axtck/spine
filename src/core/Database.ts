@@ -1,8 +1,8 @@
-import mysql, { Connection } from "mysql";
+import mysql, { Connection, QueryOptions } from "mysql";
 import penv from "../config/penv";
-import { ILogger } from "./types";
+import { IDatabase, ILogger } from "./types";
 
-export class Database {
+export class Database implements IDatabase {
     public logger: ILogger;
     public connection: Connection;
 
@@ -17,4 +17,16 @@ export class Database {
             database: penv.mysqlDb
         });
     }
+
+    // async query(sql: string | QueryOptions, options?: unknown): Promise<unknown[] | unknown> {
+    //     const result = this.connection.query(sql, options, (err, res) => {
+    //         if (err) {
+    //             this.logger.error(err.message);
+    //             throw new Error("Mysql query");
+    //         }
+    //         return res;
+    //     });
+
+    //     return result;
+    // }
 }
