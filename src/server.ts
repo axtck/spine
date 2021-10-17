@@ -3,7 +3,6 @@ import express, { Application } from "express";
 const app: Application = express();
 
 // dependencies
-import { MysqlError } from "mysql";
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
@@ -18,14 +17,7 @@ Object.entries(penv).map(([k, v]) => logger.info(`${k}: \t\t\t${v}`));
 
 // database
 import { Database } from "./core/Database";
-const database = new Database(logger);
-database.connection.connect((err: MysqlError) => {
-    if (err) {
-        logger.error(err.message);
-        throw new Error("MySQL connect");
-    }
-    logger.info("Connected");
-});
+const db = new Database(logger);
 
 // api
 import api from "./api";
@@ -37,22 +29,20 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", async (req, res) => {
-    // const sql = `
-    //     select *
-    //     from users;
-    // `;
+    const sql = `
+        select *
+        from users;
+    `;
 
-    // const result = await database.query(sql);
-    // console.log(result);
+    const result = await db.query(sql);
 
     res.json({
-        message: "TS setup!"
+        rows: result
     });
 });
 
 app.use("/api/v1", api);
 
-const port = penv.port || 3001;
-app.listen(port, () => {
-    logger.info(`Listening on ${port}.`);
+app.listen(penv.port, () => {
+    logger.info(`Listening on ${penv.port}.`);
 });

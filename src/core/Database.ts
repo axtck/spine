@@ -1,32 +1,28 @@
-import mysql, { Connection, QueryOptions } from "mysql";
+import mysql, { Pool } from "mysql2/promise";
 import penv from "../config/penv";
 import { IDatabase, ILogger } from "./types";
 
 export class Database implements IDatabase {
     public logger: ILogger;
-    public connection: Connection;
+    public pool: Pool;
 
     constructor(logger: ILogger) {
         this.logger = logger;
-        const mysqlPort = isNaN(Number(penv.mysqlPort)) ? 3306 : Number(penv.mysqlPort);
-        this.connection = mysql.createConnection({
+
+        this.pool = mysql.createPool({
             host: penv.mysqlHost,
-            port: mysqlPort,
+            port: penv.mysqlPort,
             user: penv.mysqlUser,
             password: penv.mysqlPw,
             database: penv.mysqlDb
         });
+
+        this.pool.getConnection();
     }
 
-    // async query(sql: string | QueryOptions, options?: unknown): Promise<unknown[] | unknown> {
-    //     const result = this.connection.query(sql, options, (err, res) => {
-    //         if (err) {
-    //             this.logger.error(err.message);
-    //             throw new Error("Mysql query");
-    //         }
-    //         return res;
-    //     });
-
-    //     return result;
-    // }
+    async query(sql: string, options?: unknown): Promise<unknown[] | unknown> {
+        const [rows] = await this.pool.query(sql, options);
+        if (!rows) throw new Error("qsdfqsdf");
+        return rows;
+    }
 }
