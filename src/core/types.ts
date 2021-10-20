@@ -11,3 +11,8 @@ export interface ILogger {
 export interface IDatabase {
     logger: ILogger;
 }
+
+export interface IPerson {
+    name: string;
+    id: number;
+}

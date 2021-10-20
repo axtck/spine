@@ -12,8 +12,7 @@ export class Logger implements ILogger {
     }
 
     private get level(): string {
-        const env = penv.environment || "development";
-        return (env === "development") ? "debug" : "warn";
+        return (penv.environment === "development") ? "debug" : "warn";
     }
 
     private format = winston.format.combine(
@@ -40,23 +39,23 @@ export class Logger implements ILogger {
         transports: this.transports
     });
 
-    public error(message: LogMessageTypes): void {
+    error(message: LogMessageTypes): void {
         this.logger.error(message);
     }
 
-    public warn(message: LogMessageTypes): void {
+    warn(message: LogMessageTypes): void {
         this.logger.warn(message);
     }
 
-    public info(message: LogMessageTypes): void {
+    info(message: LogMessageTypes): void {
         this.logger.info(message);
     }
 
-    public http(message: LogMessageTypes): void {
+    http(message: LogMessageTypes): void {
         this.logger.http(message);
     }
 
-    public debug(message: LogMessageTypes): void {
+    debug(message: LogMessageTypes): void {
         this.logger.debug(message);
     }
 }

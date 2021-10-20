@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/server.js",
-    "dev": "nodemon src/server.ts",
+    "start": "npm run build && node dist/server.js",
+    "build": "rimraf ./dist && npx tsc",
     "lint": "eslint . --ext .ts",
-    "build": "tsc -p ."
+    "dev": "nodemon src/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
     "@typescript-eslint/parser": "^4.33.0",
     "eslint": "^7.32.0",
     "nodemon": "^2.0.13",
+    "rimraf": "^3.0.2",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3"
   },

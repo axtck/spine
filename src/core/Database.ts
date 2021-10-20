@@ -3,26 +3,36 @@ import penv from "../config/penv";
 import { IDatabase, ILogger } from "./types";
 
 export class Database implements IDatabase {
-    public logger: ILogger;
-    public pool: Pool;
+    logger: ILogger;
+    pool: Pool;
 
     constructor(logger: ILogger) {
         this.logger = logger;
 
-        this.pool = mysql.createPool({
-            host: penv.mysqlHost,
-            port: penv.mysqlPort,
-            user: penv.mysqlUser,
-            password: penv.mysqlPw,
-            database: penv.mysqlDb
+        try {
+            this.pool = mysql.createPool({
+                host: penv.mysqlHost,
+                port: penv.mysqlPort,
+                user: penv.mysqlUser,
+                password: penv.mysqlPw,
+                database: penv.mysqlDb
+            });
+            this.pool.getConnection();
+        } catch {
+            throw new Error("Something went wrong creating pool.");
+        }
+
+        this.pool.on("connection", () => {
+            this.logger.info("Db received connection.");
         });
 
-        this.pool.getConnection();
+        this.pool.on("release", () => {
+            this.logger.info("Db got released.");
+        });
     }
 
-    async query(sql: string, options?: unknown): Promise<unknown[] | unknown> {
+    async query(sql: string, options?: unknown): Promise<any> {
         const [rows] = await this.pool.query(sql, options);
-        if (!rows) throw new Error("qsdfqsdf");
         return rows;
     }
 }

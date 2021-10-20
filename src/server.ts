@@ -1,3 +1,4 @@
+import { IPerson } from "./core/types";
 // app
 import express, { Application } from "express";
 const app: Application = express();
@@ -33,11 +34,10 @@ app.get("/", async (req, res) => {
         select *
         from users;
     `;
-
-    const result = await db.query(sql);
+    const people: IPerson[] = await db.query(sql);
 
     res.json({
-        rows: result
+        result: people.map(p => p.id)
     });
 });
 
