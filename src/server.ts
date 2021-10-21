@@ -34,10 +34,12 @@ app.get("/", async (req, res) => {
         select *
         from users;
     `;
-    const people: IPerson[] = await db.query(sql);
+    const people = await db.query<IPerson>(sql);
+
+    console.log(people[0].id);
 
     res.json({
-        result: people.map(p => p.id)
+        result: "qsf"
     });
 });
 

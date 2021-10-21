@@ -1,6 +1,6 @@
-import mysql, { Pool } from "mysql2/promise";
+import mysql, { FieldPacket, Pool } from "mysql2";
 import penv from "../config/penv";
-import { IDatabase, ILogger } from "./types";
+import { DbQueryResult, IDatabase, ILogger } from "./types";
 
 export class Database implements IDatabase {
     logger: ILogger;
@@ -17,7 +17,9 @@ export class Database implements IDatabase {
                 password: penv.mysqlPw,
                 database: penv.mysqlDb
             });
-            this.pool.getConnection();
+            this.pool.getConnection(() => {
+                console.log("Got connection");
+            });
         } catch {
             throw new Error("Something went wrong creating pool.");
         }
@@ -31,8 +33,8 @@ export class Database implements IDatabase {
         });
     }
 
-    async query(sql: string, options?: unknown): Promise<any> {
-        const [rows] = await this.pool.query(sql, options);
-        return rows;
+    async query<T>(sql: string, options?: unknown): Promise<[DbQueryResult<T>, mysql.FieldPacket[]]> {
+        const result: Promise<[DbQueryResult<T>, FieldPacket[]]> = this.pool.promise().query<DbQueryResult<T>>(sql, options);
+        return result;
     }
 }

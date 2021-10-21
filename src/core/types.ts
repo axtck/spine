@@ -1,3 +1,5 @@
+import { OkPacket, RowDataPacket } from "mysql2";
+
 export type LogMessageTypes = string | number | Record<string, unknown>;
 
 export interface ILogger {
@@ -16,3 +18,11 @@ export interface IPerson {
     name: string;
     id: number;
 }
+
+export interface IQueryResult<T> extends RowDataPacket {
+    data: T[];
+}
+
+export type DbDefaults = RowDataPacket[] | RowDataPacket[][] | OkPacket[] | OkPacket;
+export type DbQueryResult<T> = T & DbDefaults;
+
