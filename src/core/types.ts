@@ -19,10 +19,5 @@ export interface IPerson {
     id: number;
 }
 
-export interface IQueryResult<T> extends RowDataPacket {
-    data: T[];
-}
-
 export type DbDefaults = RowDataPacket[] | RowDataPacket[][] | OkPacket[] | OkPacket;
 export type DbQueryResult<T> = T & DbDefaults;
-
