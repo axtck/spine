@@ -32,10 +32,10 @@ app.use(express.json());
 app.get("/", async (req, res) => {
     const sql = `
         select *
-        from users;
+        from users where id = 1;
     `;
 
-    const people = await db.query<IPerson>(sql);
+    const people = await db.queryOne<IPerson>(sql);
 
     res.json({
         result: people

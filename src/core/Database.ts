@@ -10,6 +10,7 @@ export class Database implements IDatabase {
         this.logger = logger;
 
         try {
+            // create pool
             this.pool = mysql.createPool({
                 host: penv.mysqlHost,
                 port: penv.mysqlPort,
@@ -23,6 +24,7 @@ export class Database implements IDatabase {
             throw new Error("Something went wrong creating pool.");
         }
 
+        // pool listeners
         this.pool.on("connection", () => {
             this.logger.info("Pool connected.");
         });
@@ -32,8 +34,30 @@ export class Database implements IDatabase {
         });
     }
 
+
+    /**
+     * Perform a query against the database
+     * @param {string} sql - SQL query to execute
+     * @param {unknown=} options - options for query
+     * @return {PromiseLike<DbQueryResult<T[]>>} - promise that resolves in an array of rows 
+     */
     async query<T>(sql: string, options?: unknown): Promise<DbQueryResult<T[]>> {
+        // get rows
         const [result] = await this.pool.query<DbQueryResult<T[]>>(sql, options);
         return result;
+    }
+
+    /**
+     * Perform a unique query against the database
+     * @param {string} sql - SQL query to execute
+     * @param {unknown=} options - options for query
+     * @return {PromiseLike<T>} - promise that resolves in a single row 
+     */
+    async queryOne<T>(sql: string, options?: unknown): Promise<T> {
+        const result = await this.query<T>(sql, options);
+        if (result.length !== 1) {
+            throw new Error(`More than one row for query ${sql}.`);
+        }
+        return result[0];
     }
 }
