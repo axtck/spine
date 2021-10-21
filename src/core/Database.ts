@@ -1,4 +1,4 @@
-import mysql, { FieldPacket, Pool } from "mysql2";
+import mysql, { Pool } from "mysql2";
 import penv from "../config/penv";
 import { DbQueryResult, IDatabase, ILogger } from "./types";
 
@@ -33,8 +33,8 @@ export class Database implements IDatabase {
         });
     }
 
-    async query<T>(sql: string, options?: unknown): Promise<[DbQueryResult<T>, mysql.FieldPacket[]]> {
-        const result: Promise<[DbQueryResult<T>, FieldPacket[]]> = this.pool.promise().query<DbQueryResult<T>>(sql, options);
+    async query<T>(sql: string, options?: unknown): Promise<DbQueryResult<T[]>> {
+        const [result] = await this.pool.promise().query<DbQueryResult<T[]>>(sql, options);
         return result;
     }
 }
