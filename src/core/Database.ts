@@ -23,15 +23,6 @@ export class Database implements IDatabase {
             this.logger.error("Error creating / connecting pool.");
             throw new Error("Something went wrong creating pool.");
         }
-
-        // pool listeners
-        this.pool.on("connection", () => {
-            this.logger.info("Pool connected.");
-        });
-
-        this.pool.on("release", () => {
-            this.logger.info("Pool released.");
-        });
     }
 
 

@@ -1,4 +1,3 @@
-import { IPerson } from "./core/types";
 // app
 import express, { Application } from "express";
 const app: Application = express();
@@ -16,29 +15,27 @@ const logger = new Logger();
 import penv from "./config/penv";
 Object.entries(penv).map(([k, v]) => logger.info(`${k}: \t\t\t${v}`));
 
-// database
-import { Database } from "./core/Database";
-const db = new Database(logger);
-
 // api
 import api from "./api";
+import setupInitialDatabase from "./lib/database/setupInitialDatabase";
 
 // basic middleware
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); // parse requests
+app.use(express.urlencoded({ extended: true }));
 
-app.get("/", async (req, res) => {
-    const sql = `
-        select *
-        from users where id = 1;
-    `;
+app.get("/setupInitialDatabase", async (req, res) => {
 
-    const people = await db.queryOne<IPerson>(sql);
+    try {
+        await setupInitialDatabase();
+    } catch {
+        logger.error("Initial database setup failed (server.ts).");
+    }
 
     res.json({
-        result: people
+        message: "Setting up initial database"
     });
 });
 

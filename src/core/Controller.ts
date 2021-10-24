@@ -7,8 +7,6 @@ export class Controller {
         this.logger = logger;
         this.database = database;
     }
-
-
 }
 
 export default Controller;
