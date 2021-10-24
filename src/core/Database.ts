@@ -8,7 +8,6 @@ export class Database implements IDatabase {
 
     constructor(logger: ILogger) {
         this.logger = logger;
-
         try {
             // create pool
             this.pool = mysql.createPool({
@@ -19,12 +18,12 @@ export class Database implements IDatabase {
                 database: penv.mysqlDb
             });
             this.pool.getConnection();
-        } catch {
+        } catch (e) {
+            console.log(e);
             this.logger.error("Error creating / connecting pool.");
             throw new Error("Something went wrong creating pool.");
         }
     }
-
 
     /**
      * Perform a query against the database
