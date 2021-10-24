@@ -27,10 +27,11 @@ app.use(express.json()); // parse requests
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/setupInitialDatabase", async (req, res) => {
-
     try {
         await setupInitialDatabase();
-    } catch {
+    } catch (e) {
+        console.log(e);
+        logger.error(`${e}`);
         logger.error("Initial database setup failed (server.ts).");
     }
 

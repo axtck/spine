@@ -9,16 +9,18 @@ async function setupInitialDatabase(): Promise<void> {
     const db = new Database(logger);
 
     const dbName = penv.environment === "production" ? "prod" : "dev";
-    const createDbQuery = "CREATE DATABASE [IF NOT EXISTS] ?;";
-    const useDbQuery = "USE ?";
+    const createDbQuery = `CREATE DATABASE IF NOT EXISTS ${dbName};`;
+    const useDbQuery = `USE ${dbName};`;
 
     try {
-        await db.query(createDbQuery, dbName);
-        await db.query(useDbQuery, dbName);
-        // await createRoles();
-        // await createBaseUsers();
+        await db.query(createDbQuery);
+        await db.query(useDbQuery);
+        await createRoles();
+        await createBaseUsers();
         db.logger.info("Initial database setup succeeded.");
-    } catch {
+    } catch(e) {
+        console.log(e);
+        logger.error(`${e}`);
         throw new Error("Initial database setup failed.");
     }
 

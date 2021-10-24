@@ -1,21 +1,15 @@
 type RoleNames = "user" | "admin" | "moderator";
 
 export interface IRoleModel {
-    id: number;
+    id?: number;
     name: RoleNames;
 }
 
 export class UserModel implements IRoleModel {
-    private _id: number;
     private _name: RoleNames;
 
-    constructor(id: number, name: RoleNames) {
-        this._id = id;
+    constructor(name: RoleNames) {
         this._name = name;
-    }
-
-    public get id(): number {
-        return this._id;
     }
 
     public get name(): RoleNames {

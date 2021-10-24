@@ -7,30 +7,32 @@ async function createRoles(): Promise<void> {
     const db = new Database(logger);
 
     const createRolesTableQuery = `
-        CREATE TABLE [IF NOT EXISTS] roles (
+        CREATE TABLE IF NOT EXISTS roles (
             id INT NOT NULL AUTO_INCREMENT,
 	        name VARCHAR(30) NOT NULL,
 	        PRIMARY KEY (id)
         );
     `;
 
+    const roleValues = InitialDatabaseConstants.userRoles.map((r, i, a) => {
+        return `(${r.id}, '${r.name}')${i === a.length - 1 ? "" : ","}`;
+    }).join("");
+
     const insertRolesQuery = `
-        INSERT INTO roles (
+        INSERT IGNORE INTO roles (
             id, 
             name
         )
-        VALUES ?; 
+        VALUES ${roleValues};
     `;
-
-    const roleValues = InitialDatabaseConstants.userRoles.map((r) => {
-        return `(${r.id}, ${r.name})`;
-    });
 
     try {
         await db.query(createRolesTableQuery);
         await db.query(insertRolesQuery, roleValues);
         db.logger.info("Inserting roles succeeded.");
-    } catch {
+    } catch (e) {
+        console.log(e);
+        logger.error(`${e}`);
         throw new Error("Inserting roles failed.");
     }
 }
