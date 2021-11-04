@@ -7,7 +7,8 @@
     "start": "npm run build && node dist/server.js",
     "build": "rimraf ./dist && npx tsc",
     "lint": "eslint . --ext .ts",
-    "dev": "nodemon src/server.ts"
+    "dev": "nodemon src/server.ts",
+    "watch": "npx tsc --watch"
   },
   "keywords": [],
   "author": "",

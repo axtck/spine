@@ -17,7 +17,7 @@ export class Database implements IDatabase {
                 password: penv.mysqlPw,
                 database: penv.mysqlDb
             });
-            this.pool.getConnection();
+            // this.pool.getConnection();
         } catch (e) {
             console.log(e);
             this.logger.error("Error creating / connecting pool.");

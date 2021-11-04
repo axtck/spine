@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Server",
+            "type": "pwa-node",
+            "request": "launch",
+            "smartStep": true,
+            "sourceMaps": true,
+            "console": "integratedTerminal",
+            "cwd": "${workspaceRoot}",
+            "skipFiles": [
+                "<node_internals>/**",
+                "${workspaceFolder}/node_modules/**"
+            ],
+            "program": "${workspaceFolder}/dist/server.js",
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ]
+        }
+    ]
+}
