@@ -12,8 +12,6 @@ async function setupInitialDatabase(): Promise<void> {
         await createBaseUsers();
         db.logger.info("Initial database setup succeeded.");
     } catch (e) {
-        console.log(e);
-        logger.error(`${e}`);
         throw new Error("Initial database setup failed.");
     }
 }

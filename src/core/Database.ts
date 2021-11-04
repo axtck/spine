@@ -1,6 +1,6 @@
 import mysql, { Pool } from "mysql2/promise";
 import penv from "../config/penv";
-import { DbQueryResult, IDatabase, ILogger } from "./types";
+import { DbQueryResult, IDatabase, ILogger, IQueryError } from "./types";
 
 export class Database implements IDatabase {
     logger: ILogger;
@@ -17,7 +17,6 @@ export class Database implements IDatabase {
                 password: penv.mysqlPw,
                 database: penv.mysqlDb
             });
-            // this.pool.getConnection();
         } catch (e) {
             console.log(e);
             this.logger.error("Error creating / connecting pool.");
@@ -31,10 +30,19 @@ export class Database implements IDatabase {
      * @param {unknown=} options - options for query
      * @return {PromiseLike<DbQueryResult<T[]>>} - promise that resolves in an array of rows 
      */
-    async query<T>(sql: string, options?: unknown): Promise<DbQueryResult<T[]>> {
-        // get rows
-        const [result] = await this.pool.query<DbQueryResult<T[]>>(sql, options);
-        return result;
+    async query<T>(sql: string, options?: unknown): Promise<DbQueryResult<T[]> | null> {
+        try {
+            // get rows
+            const [result] = await this.pool.query<DbQueryResult<T[]>>(sql, options);
+            return result;
+        } catch (e) {
+            if (e instanceof Error) {
+                const queryErr = e as unknown as IQueryError;
+                this.logger.error(JSON.stringify(queryErr));
+                return null;
+            }
+            throw e;
+        }
     }
 
     /**
@@ -45,6 +53,9 @@ export class Database implements IDatabase {
      */
     async queryOne<T>(sql: string, options?: unknown): Promise<T> {
         const result = await this.query<T>(sql, options);
+        if (!result) {
+            throw new Error(`No result for query ${sql}`);
+        }
         if (result.length !== 1) {
             throw new Error(`More than one row for query ${sql}.`);
         }

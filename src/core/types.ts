@@ -21,3 +21,11 @@ export interface IPerson {
 
 export type DbDefaults = RowDataPacket[] | RowDataPacket[][] | OkPacket[] | OkPacket;
 export type DbQueryResult<T> = T & DbDefaults;
+
+export interface IQueryError {
+    code: string;
+    errno: number;
+    sql: string;
+    sqlState: string;
+    sqlMessage: string;
+}

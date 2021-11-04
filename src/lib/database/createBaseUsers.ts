@@ -17,7 +17,7 @@ async function createBaseUsers(): Promise<void> {
     `;
 
     const baseUserValues = InitialDatabaseConstants.baseUsers.map((u, i, a) => {
-        return `(${u.id}, '${u.username}', '${u.email}', '${u.password}')${i === a.length - 1 ? "": ","}`;
+        return `(${u.id}, '${u.username}', '${u.email}', '${u.password}')${i === a.length - 1 ? "" : ","}`;
     }).join("");
 
     const insertBaseUsersQuery = `
@@ -34,7 +34,7 @@ async function createBaseUsers(): Promise<void> {
         await db.query(createUsersTableQuery);
         await db.query(insertBaseUsersQuery, baseUserValues);
         db.logger.info("Inserting base users succeeded.");
-    } catch(e) {
+    } catch (e) {
         console.log(e);
         logger.error(`${e}`);
         throw new Error("Inserting base users failed.");
