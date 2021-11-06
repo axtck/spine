@@ -3,7 +3,7 @@ import { Database } from "../../core/Database";
 import createRoles from "./createRoles";
 import createBaseUsers from "./createBaseUsers";
 
-async function setupInitialDatabase(): Promise<void> {
+const setupInitialDatabase = async (): Promise<void> => {
     const logger = new Logger();
     const db = new Database(logger);
 
@@ -14,6 +14,6 @@ async function setupInitialDatabase(): Promise<void> {
     } catch (e) {
         throw new Error("Initial database setup failed.");
     }
-}
+};
 
 export default setupInitialDatabase;

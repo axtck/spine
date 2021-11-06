@@ -2,7 +2,7 @@ import { InitialDatabaseConstants } from "../InitialDatabaseConstants";
 import { Database } from "../../core/Database";
 import { Logger } from "../../core/Logger";
 
-async function createBaseUsers(): Promise<void> {
+const createBaseUsers = async (): Promise<void> => {
     const logger = new Logger();
     const db = new Database(logger);
 
@@ -39,6 +39,6 @@ async function createBaseUsers(): Promise<void> {
         logger.error(`${e}`);
         throw new Error("Inserting base users failed.");
     }
-}
+};
 
 export default createBaseUsers;

@@ -1,6 +1,7 @@
+import { transformJSON } from "./../lib/functions/logging";
 import mysql, { Pool } from "mysql2/promise";
 import penv from "../config/penv";
-import { DbQueryResult, IDatabase, ILogger, IQueryError } from "./types";
+import { DbQueryResult, IDatabase, ILogger } from "./types";
 
 export class Database implements IDatabase {
     logger: ILogger;
@@ -32,14 +33,12 @@ export class Database implements IDatabase {
      */
     async query<T>(sql: string, options?: unknown): Promise<DbQueryResult<T[]> | null> {
         try {
-            // get rows
+            this.logger.info(`Executing query:\n${sql}\nWith options:\n${JSON.stringify(options)}`);
             const [result] = await this.pool.query<DbQueryResult<T[]>>(sql, options);
             return result;
         } catch (e) {
             if (e instanceof Error) {
-                const queryErr = e as unknown as IQueryError;
-                this.logger.error(JSON.stringify(queryErr));
-                return null;
+                this.logger.error(`Something went wrong executing query:\n${transformJSON(e)}`);
             }
             throw e;
         }

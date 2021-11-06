@@ -2,7 +2,7 @@ import { InitialDatabaseConstants } from "../InitialDatabaseConstants";
 import { Database } from "../../core/Database";
 import { Logger } from "../../core/Logger";
 
-async function createRoles(): Promise<void> {
+const createRoles = async (): Promise<void> => {
     const logger = new Logger();
     const db = new Database(logger);
 
@@ -35,6 +35,6 @@ async function createRoles(): Promise<void> {
         logger.error(`${e}`);
         throw new Error("Inserting roles failed.");
     }
-}
+};
 
 export default createRoles;
