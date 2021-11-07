@@ -19,9 +19,10 @@ export class Database implements IDatabase {
                 database: penv.mysqlDb
             });
         } catch (e) {
-            console.log(e);
-            this.logger.error("Error creating / connecting pool.");
-            throw new Error("Something went wrong creating pool.");
+            if (e instanceof Error) {
+                this.logger.error(`Something went wrong creating pool.\nMessage: ${e.message}`);
+            }
+            throw e;
         }
     }
 
@@ -33,12 +34,12 @@ export class Database implements IDatabase {
      */
     async query<T>(sql: string, options?: unknown): Promise<DbQueryResult<T[]> | null> {
         try {
-            this.logger.info(`Executing query:\n${sql}\nWith options:\n${JSON.stringify(options)}`);
+            this.logger.info(`Executing query:\n${sql}${options ? `\nWith options:\n${JSON.stringify(options)}` : ""}`);
             const [result] = await this.pool.query<DbQueryResult<T[]>>(sql, options);
             return result;
         } catch (e) {
             if (e instanceof Error) {
-                this.logger.error(`Something went wrong executing query:\n${transformJSON(e)}`);
+                this.logger.error(`Something went wrong executing query\nInfo:\n${transformJSON(e)}\nJSON:\n${JSON.stringify(e)}`);
             }
             throw e;
         }
