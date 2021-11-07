@@ -1,11 +1,10 @@
 import { InitialDatabaseConstants } from "../InitialDatabaseConstants";
 import { Database } from "../../core/Database";
 import { Logger } from "../../core/Logger";
+const logger = new Logger();
+const db = new Database(logger);
 
 const createBaseUsers = async (): Promise<void> => {
-    const logger = new Logger();
-    const db = new Database(logger);
-
     const createUsersTableQuery = `
         CREATE TABLE IF NOT EXISTS users (
             id INT NOT NULL AUTO_INCREMENT,
