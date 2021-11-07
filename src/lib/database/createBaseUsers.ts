@@ -32,12 +32,11 @@ const createBaseUsers = async (): Promise<void> => {
 
     try {
         await db.query(createUsersTableQuery);
-        await db.query(insertBaseUsersQuery, baseUserValues);
-        db.logger.info("Inserting base users succeeded.");
+        await db.query(insertBaseUsersQuery);
+        db.logger.info("Creating base users succeeded.");
     } catch (e) {
-        console.log(e);
-        logger.error(`${e}`);
-        throw new Error("Inserting base users failed.");
+        logger.error("Creating base users failed.");
+        throw e;
     }
 };
 

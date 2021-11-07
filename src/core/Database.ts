@@ -20,7 +20,7 @@ export class Database implements IDatabase {
             });
         } catch (e) {
             if (e instanceof Error) {
-                this.logger.error(`Something went wrong creating pool.\nMessage: ${e.message}`);
+                this.logger.error(`Creating pool failed.\nMessage: ${e.message}`);
             }
             throw e;
         }
@@ -39,7 +39,7 @@ export class Database implements IDatabase {
             return result;
         } catch (e) {
             if (e instanceof Error) {
-                this.logger.error(`Something went wrong executing query\nInfo:\n${transformJSON(e)}\nJSON:\n${JSON.stringify(e)}`);
+                this.logger.error(`Executing query failed.\nInfo:\n${transformJSON(e)}\nJSON:\n${JSON.stringify(e)}`);
             }
             throw e;
         }

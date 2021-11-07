@@ -28,12 +28,11 @@ const createRoles = async (): Promise<void> => {
 
     try {
         await db.query(createRolesTableQuery);
-        await db.query(insertRolesQuery, roleValues);
-        db.logger.info("Inserting roles succeeded.");
+        await db.query(insertRolesQuery);
+        db.logger.info("Creating roles succeeded.");
     } catch (e) {
-        console.log(e);
-        logger.error(`${e}`);
-        throw new Error("Inserting roles failed.");
+        logger.error("Creating roles failed.");
+        throw e;
     }
 };
 

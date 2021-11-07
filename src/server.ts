@@ -1,3 +1,4 @@
+import { transformJSON } from './lib/functions/logging';
 // app
 import express, { Application } from "express";
 const app: Application = express();
@@ -13,7 +14,7 @@ const logger = new Logger();
 
 // .env
 import penv from "./config/penv";
-Object.entries(penv).map(([k, v]) => logger.info(`${k}: \t\t\t${v}`));
+logger.info(`Environment variables:\n${transformJSON(penv)}`);
 
 // api
 import api from "./api";
@@ -29,9 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/setupInitialDatabase", async (req, res) => {
     try {
         await setupInitialDatabase();
-    } catch (e) {
-        console.log(e);
-        logger.error(`${e}`);
+    } catch {
         logger.error("Initial database setup failed (server.ts).");
     }
 
