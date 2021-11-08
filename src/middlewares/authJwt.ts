@@ -1,4 +1,3 @@
-import { IGetUserAuthInfoRequest } from "./types";
 import { Database } from "./../core/Database";
 import { Logger } from "./../core/Logger";
 import jwt from "jsonwebtoken";
@@ -8,7 +7,6 @@ import { NextFunction, Request, Response } from "express";
 const logger = new Logger;
 const db = new Database(logger);
 
-// how to type request??
 export const verifyToken = (req: Request, res: Response, next: NextFunction): Response | void => {
     const token = req.header("x-access-token");
 
@@ -26,9 +24,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): Re
                 });
             }
 
-            if (decoded) {
-                // req.id = decoded.id;
-            }
+            if (decoded) req.body.id = decoded.id;
             next();
         });
     }

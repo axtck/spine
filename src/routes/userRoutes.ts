@@ -1,4 +1,4 @@
-import { Application } from "express";
+import { Application, Request, Response } from "express";
 import { isAdmin } from "../middlewares/authJwt";
 import { verifyToken } from "../middlewares/authJwt";
 
@@ -11,7 +11,10 @@ const routes = (app: Application): void => {
         next();
     });
 
-    app.get("/api/test/admin", [verifyToken, isAdmin]);
+    app.get("/api/test/admin", [verifyToken,isAdmin], (req: Request, res:Response) => {
+        console.log(req.body);
+        res.json({message: "test admin"})
+    });
 };
 
 export default routes;
