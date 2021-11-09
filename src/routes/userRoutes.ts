@@ -11,9 +11,9 @@ const routes = (app: Application): void => {
         next();
     });
 
-    app.get("/api/test/admin", [verifyToken,isAdmin], (req: Request, res:Response) => {
+    app.get("/api/test/admin", [verifyToken, isAdmin], (req: Request, res: Response) => {
         console.log(req.body);
-        res.json({message: "test admin"})
+        res.json({ message: "test admin" });
     });
 };
 

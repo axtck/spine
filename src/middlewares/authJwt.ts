@@ -24,7 +24,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): Re
                 });
             }
 
-            if (decoded) req.body.id = decoded.id;
+            if (decoded) req.id = decoded.id;
             next();
         });
     }
