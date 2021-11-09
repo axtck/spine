@@ -7,7 +7,6 @@
     "start": "npm run build && node dist/server.js",
     "build": "rimraf ./dist && npx tsc",
     "lint": "eslint . --ext .ts",
-    "dev": "nodemon src/server.ts",
     "watch": "npx tsc --watch"
   },
   "keywords": [],
@@ -20,10 +19,9 @@
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "eslint": "^7.32.0",
-    "nodemon": "^2.0.13",
     "rimraf": "^3.0.2",
-    "ts-node": "^10.2.1",
-    "typescript": "^4.4.3"
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.2",
