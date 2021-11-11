@@ -13,7 +13,7 @@ const createUserRoles = async (): Promise<void> => {
 	        PRIMARY KEY (id),
 	        FOREIGN KEY (user_id) REFERENCES users(id),
 	        FOREIGN KEY (role_id) REFERENCES roles(id)
-        );
+        )
     `;
 
     const userRolesValues = InitialDatabaseConstants.baseUsers.map((u, i, a) => {
@@ -26,7 +26,7 @@ const createUserRoles = async (): Promise<void> => {
             user_id,
             role_id
         )
-        VALUES ${userRolesValues}; 
+        VALUES ${userRolesValues}
     `;
 
     try {

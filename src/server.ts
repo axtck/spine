@@ -18,7 +18,9 @@ logger.info(`Environment variables:\n${transformJSON(penv)}`);
 
 // api
 import userRoutes from "./routes/userRoutes";
+import authRoutes from "./routes/authRoutes";
 userRoutes(app);
+authRoutes(app);
 
 import api from "./api";
 import setupInitialDatabase from "./lib/database/setupInitialDatabase";

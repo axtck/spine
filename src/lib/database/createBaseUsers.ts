@@ -12,7 +12,7 @@ const createBaseUsers = async (): Promise<void> => {
             email VARCHAR(50) NOT NULL,
             password VARCHAR(100) NOT NULL,
 	        PRIMARY KEY (id)
-        );
+        )
     `;
 
     const baseUserValues = InitialDatabaseConstants.baseUsers.map((u, i, a) => {
@@ -26,7 +26,7 @@ const createBaseUsers = async (): Promise<void> => {
             email,
             password 
         )
-        VALUES ${baseUserValues}; 
+        VALUES ${baseUserValues}
     `;
 
     try {

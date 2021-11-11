@@ -10,7 +10,7 @@ const createRoles = async (): Promise<void> => {
             id INT NOT NULL AUTO_INCREMENT,
 	        name VARCHAR(30) NOT NULL,
 	        PRIMARY KEY (id)
-        );
+        )
     `;
 
     const roleValues = InitialDatabaseConstants.userRoles.map((r, i, a) => {
@@ -22,7 +22,7 @@ const createRoles = async (): Promise<void> => {
             id, 
             name
         )
-        VALUES ${roleValues};
+        VALUES ${roleValues}
     `;
 
     try {

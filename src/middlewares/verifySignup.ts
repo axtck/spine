@@ -7,29 +7,24 @@ const logger = new Logger();
 const db = new Database(logger);
 
 export const checkDuplicateUsernameOrEmail = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const checkUsernameQuery = `
-        SELECT 
-            * 
-        FROM users 
-        WHERE username = ?; 
-    `;
-
-    const checkEmailQuery = `
-        SELECT
-            *
-        FROM users
-        WHERE email = ?;
-    `;
+    const buildSelectQueryBulder = (column: string) => {
+        return `
+            SELECT 
+                * 
+            FROM users 
+            WHERE ${column} = ?; 
+        `;
+    };
 
     try {
-        const usernameCheck = await db.query(checkUsernameQuery, req.body.username);
+        const usernameCheck = await db.query(buildSelectQueryBulder("username"), req.body.username);
         if (usernameCheck) {
             res.status(400).send({
                 message: "Username is already in use."
             });
             return;
         }
-        const emailCheck = await db.query(checkEmailQuery, req.body.email);
+        const emailCheck = await db.query("email", req.body.email);
         if (emailCheck) {
             res.status(400).send({
                 message: "Email is already in use."
