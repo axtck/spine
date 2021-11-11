@@ -30,19 +30,19 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): Re
     }
 };
 
-export const isAdmin = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
-    const getUserQuery = `
-        SELECT 
-            r.name 
-        FROM users u 
-        LEFT JOIN user_roles ur 
-            ON u.id = ur.user_id
-        LEFT JOIN roles r 
-            ON ur.role_id = r.id
-        where user_id = ?;
-    `;
+const getUserRolesQuery = `
+    SELECT 
+        r.name 
+    FROM users u 
+    LEFT JOIN user_roles ur 
+        ON u.id = ur.user_id
+    LEFT JOIN roles r 
+        ON ur.role_id = r.id
+    WHERE user_id = ?
+`;
 
-    const roles = await db.query<{ name: string; }>(getUserQuery, ["3"]);
+export const isAdmin = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+    const roles = await db.query<{ name: string; }>(getUserRolesQuery, [req.id]);
 
     if (!roles) return;
 
@@ -52,7 +52,39 @@ export const isAdmin = async (req: Request, res: Response, next: NextFunction): 
     }
 
     res.status(403).send({
-        message: "Require admin role"
+        message: "Require admin role."
+    });
+    return;
+};
+
+export const isModerator = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+    const roles = await db.query<{ name: string; }>(getUserRolesQuery, [req.id]);
+
+    if (!roles) return;
+
+    if (roles.map(r => r.name).includes("moderator")) {
+        next();
+        return;
+    }
+
+    res.status(403).send({
+        message: "Require moderator role."
+    });
+    return;
+};
+
+export const isAdminOrModerator = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+    const roles = await db.query<{ name: string; }>(getUserRolesQuery, [req.id]);
+
+    if (!roles) return;
+
+    if (roles.map(r => r.name).includes("admin") || roles.map(r => r.name).includes("moderator")) {
+        next();
+        return;
+    }
+
+    res.status(403).send({
+        message: "Require admin or moderator role."
     });
     return;
 };
