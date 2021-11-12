@@ -19,8 +19,6 @@ logger.info(`Environment variables:\n${transformJSON(penv)}`);
 // api
 import userRoutes from "./routes/userRoutes";
 import authRoutes from "./routes/authRoutes";
-userRoutes(app);
-authRoutes(app);
 
 import api from "./api";
 import setupInitialDatabase from "./lib/database/setupInitialDatabase";
@@ -33,6 +31,9 @@ app.use(cors({
 }));
 app.use(express.json()); // parse requests
 app.use(express.urlencoded({ extended: true }));
+
+userRoutes(app);
+authRoutes(app);
 
 app.get("/setupInitialDatabase", async (req, res) => {
     try {
