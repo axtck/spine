@@ -11,7 +11,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): Re
     const token = req.header("x-access-token");
 
     if (!token) {
-        return res.status(403).send({
+        return res.status(403).json({
             message: "No token provided."
         });
     }
@@ -19,7 +19,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): Re
     if (penv.jwtAuthkey) {
         jwt.verify(token, penv.jwtAuthkey, (err, decoded) => {
             if (err) {
-                return res.status(401).send({
+                return res.status(401).json({
                     message: "Unauthorized."
                 });
             }
@@ -51,7 +51,7 @@ export const isAdmin = async (req: Request, res: Response, next: NextFunction): 
         return;
     }
 
-    res.status(403).send({
+    res.status(403).json({
         message: "Require admin role."
     });
     return;
@@ -67,7 +67,7 @@ export const isModerator = async (req: Request, res: Response, next: NextFunctio
         return;
     }
 
-    res.status(403).send({
+    res.status(403).json({
         message: "Require moderator role."
     });
     return;
@@ -83,7 +83,7 @@ export const isAdminOrModerator = async (req: Request, res: Response, next: Next
         return;
     }
 
-    res.status(403).send({
+    res.status(403).json({
         message: "Require admin or moderator role."
     });
     return;
