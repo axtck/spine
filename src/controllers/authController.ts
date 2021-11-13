@@ -3,8 +3,6 @@ import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import { Database } from "../core/Database";
 import { Logger } from "../core/Logger";
-import { IRoleModel } from "../models/RoleModel";
-import { IUserModel } from "../models/UserModel";
 
 const logger = new Logger();
 const db = new Database(logger);
@@ -23,12 +21,14 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
         )  
     `;
 
-    const findRoleIdQuery = `
-        SELECT 
-            id
-        FROM roles 
-        WHERE roles.name = ?
-    `;
+    const buildSelectIdQuery = (table: string, column: string): string => {
+        return `
+            SELECT 
+                id
+            FROM ${table} 
+            WHERE ${column} = ?
+        `;
+    };
 
     const createUserRoleQuery = `
         INSERT INTO user_roles (
@@ -41,35 +41,29 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
         )
     `;
 
-    const findUserByNameQuery = `
-        SELECT 
-            id
-        FROM users
-        WHERE username = ?;
-    `;
-
     try {
         const hashedPassword = bcrypt.hashSync(req.body.password, 8);
         await db.query(createUserQuery, [req.body.username, req.body.email, hashedPassword]);
-        const createdUser = await db.queryOne<IUserModel>(findUserByNameQuery, [req.body.username]);
-        if (!createdUser) throw new Error("authController.signup creating user failed.");
+        const createdUser = await db.queryOne<{ id: number; }>(buildSelectIdQuery("users", "username"), [req.body.username]);
+        if (!createdUser) throw new Error("authController.signup finding user failed.");
 
         if (req.body.roles) {
             for (const r of req.body.roles) {
-                const role = await db.queryOne<IRoleModel>(findRoleIdQuery, [r]);
+                const role = await db.queryOne<{ id: number; }>(buildSelectIdQuery("roles", "name"), [r]);
+                if (!role) throw new Error("authController.signup finding role failed.");
                 await db.query(createUserRoleQuery, [createdUser.id, role.id]);
             }
         } else {
             await db.query(createUserRoleQuery, [createdUser.id, 1]); // assign user role 
         }
-        res.send({
+        res.json({
             message: "User succesfully created."
         });
     }
     catch (e) {
         logger.error("Creating user failed.");
         if (e instanceof Error)
-            res.status(500).send({
+            res.status(500).json({
                 message: e.message
             });
         throw e;
