@@ -128,7 +128,9 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
         });
     } catch (e) {
         if (e instanceof ApiError) {
-            next(ApiError.internal("Login in failed."));
+            next(ApiError.internal("Login failed."));
+            return;
         }
+        throw (e);
     }
 };
