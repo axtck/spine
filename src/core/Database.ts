@@ -1,3 +1,4 @@
+import { Nullable } from "./../types";
 import { transformJSON } from "./../lib/functions/logging";
 import mysql, { Pool } from "mysql2/promise";
 import penv from "../config/penv";
@@ -32,7 +33,7 @@ export class Database implements IDatabase {
      * @param {unknown=} options - options for query
      * @return {PromiseLike<DbQueryResult<T[]>>} - promise that resolves in an array of rows 
      */
-    async query<T>(sql: string, options?: unknown): Promise<DbQueryResult<T[]> | null> {
+    async query<T>(sql: string, options?: unknown): Promise<DbQueryResult<Nullable<T[]>>> {
         try {
             this.logger.info(`Executing query:\n${sql}${options ? `\nWith options:\n${JSON.stringify(options)}` : ""}`);
             const [result] = await this.pool.query<DbQueryResult<T[]>>(sql, options);
@@ -51,12 +52,12 @@ export class Database implements IDatabase {
      * @param {unknown=} options - options for query
      * @return {PromiseLike<T>} - promise that resolves in a single row 
      */
-    async queryOne<T>(sql: string, options?: unknown): Promise<T> {
+    async queryOne<T>(sql: string, options?: unknown): Promise<Nullable<T>> {
         const result = await this.query<T>(sql, options);
-        if (!result) {
-            throw new Error(`No result for query ${sql}`);
+        if (!result?.length) {
+            return null;
         }
-        if (result.length !== 1) {
+        if (result.length < 1) {
             throw new Error(`More than one row for query ${sql}.`);
         }
         return result[0];

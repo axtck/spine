@@ -1,3 +1,4 @@
+import { apiErrorHandler } from "./middlewares/apiErrorHandler";
 // app
 import express, { Application } from "express";
 const app: Application = express();
@@ -48,6 +49,7 @@ app.get("/setupInitialDatabase", async (req, res) => {
 });
 
 app.use("/api/v1", api);
+app.use(apiErrorHandler);
 
 app.listen(penv.port, () => {
     logger.info(`Listening on ${penv.port}.`);
