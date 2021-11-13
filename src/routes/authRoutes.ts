@@ -1,5 +1,5 @@
 import { Application, NextFunction, Request, Response } from "express";
-import { signup } from "../controllers/authController";
+import { login, signup } from "../controllers/authController";
 import { checkDuplicateUsernameOrEmail, checkRolesExisted } from "../middlewares/verifySignup";
 
 const routes = (app: Application): void => {
@@ -12,6 +12,7 @@ const routes = (app: Application): void => {
     });
 
     app.post("/api/auth/signup", [checkDuplicateUsernameOrEmail, checkRolesExisted], signup);
+    app.post("/api/auth/login", login);
 };
 
 export default routes;

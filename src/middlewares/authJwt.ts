@@ -3,6 +3,7 @@ import { Logger } from "./../core/Logger";
 import jwt from "jsonwebtoken";
 import penv from "../config/penv";
 import { NextFunction, Request, Response } from "express";
+import { ApiError } from "../lib/errors/ApiError";
 
 const logger = new Logger;
 const db = new Database(logger);
@@ -11,23 +12,23 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): Re
     const token = req.header("x-access-token");
 
     if (!token) {
-        return res.status(403).json({
-            message: "No token provided."
-        });
+        next(ApiError.forbidden("No token provided"));
+        return;
     }
 
-    if (penv.jwtAuthkey) {
-        jwt.verify(token, penv.jwtAuthkey, (err, decoded) => {
-            if (err) {
-                return res.status(401).json({
-                    message: "Unauthorized."
-                });
-            }
+    if (!penv.jwtAuthkey) throw new Error("No JWT Authkey provided.");
 
-            if (decoded) req.id = decoded.id;
-            next();
-        });
-    }
+    jwt.verify(token, penv.jwtAuthkey, (err, decoded) => {
+        if (err) {
+            next(ApiError.unauthorized("Token authorization failed."));
+            return;
+        }
+
+        if (!decoded) throw new Error("Couldn't decode token.");
+        req.id = decoded.id;
+
+        next();
+    });
 };
 
 const getUserRolesQuery = `

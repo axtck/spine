@@ -2,9 +2,9 @@ export class ApiError extends Error {
     private _code: number;
     private _message: string;
 
-    constructor(code: number, message: string) {
+    constructor(code: number, message: string, extraName: string) {
         super();
-        this.name = "ApiError";
+        this.name = `ApiError (${extraName})`;
         this._code = code;
         this._message = message;
     }
@@ -18,10 +18,18 @@ export class ApiError extends Error {
     }
 
     static badRequest(msg: string): ApiError {
-        return new ApiError(400, msg);
+        return new ApiError(400, msg, "Bad Request");
+    }
+
+    static unauthorized(msg: string): ApiError {
+        return new ApiError(401, msg, "Unauthorized");
+    }
+
+    static forbidden(msg: string): ApiError {
+        return new ApiError(403, msg, "Forbidden");
     }
 
     static internal(msg: string): ApiError {
-        return new ApiError(500, msg);
+        return new ApiError(500, msg, "Internal");
     }
 }
