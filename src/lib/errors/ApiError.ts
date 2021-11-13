@@ -1,8 +1,10 @@
-export class ApiError {
+export class ApiError extends Error {
     private _code: number;
     private _message: string;
 
     constructor(code: number, message: string) {
+        super();
+        this.name = "ApiError";
         this._code = code;
         this._message = message;
     }

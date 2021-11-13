@@ -1,3 +1,4 @@
+import { ApiError } from "./../lib/errors/ApiError";
 // import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
@@ -8,6 +9,15 @@ const logger = new Logger();
 const db = new Database(logger);
 
 export const signup = async (req: Request, res: Response): Promise<void> => {
+    const buildSelectIdQuery = (table: string, column: string): string => {
+        return `
+            SELECT 
+                id
+            FROM ${table} 
+            WHERE ${column} = ?
+        `;
+    };
+
     const createUserQuery = `
         INSERT INTO users (
             username,
@@ -20,15 +30,6 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
             ?
         )  
     `;
-
-    const buildSelectIdQuery = (table: string, column: string): string => {
-        return `
-            SELECT 
-                id
-            FROM ${table} 
-            WHERE ${column} = ?
-        `;
-    };
 
     const createUserRoleQuery = `
         INSERT INTO user_roles (
@@ -54,8 +55,9 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
                 await db.query(createUserRoleQuery, [createdUser.id, role.id]);
             }
         } else {
-            await db.query(createUserRoleQuery, [createdUser.id, 1]); // assign user role 
+            await db.query(createUserRoleQuery, [createdUser.id, 1]); // assign 'user' role 
         }
+
         res.json({
             message: "User succesfully created."
         });
@@ -63,9 +65,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     catch (e) {
         logger.error("Creating user failed.");
         if (e instanceof Error)
-            res.status(500).json({
-                message: e.message
-            });
+            ApiError.internal(e.message);
         throw e;
     }
 };

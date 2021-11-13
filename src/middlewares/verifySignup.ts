@@ -20,19 +20,13 @@ export const checkDuplicateUsernameOrEmail = async (req: Request, res: Response,
     try {
         const usernameCheck = await db.queryOne<{ username: string; }>(buildSelectQuery("username"), [req.body.username]);
         if (usernameCheck) {
-            // next(ApiError.badRequest(`Username '${usernameCheck.username}' is already in use.`));
-            // return;
-            res.status(400).json({
-                message: "Username is already in use."
-            });
+            next(ApiError.badRequest(`Username '${usernameCheck.username}' is already in use.`));
             return;
         }
 
-        const emailCheck = await db.query(buildSelectQuery("email"), [req.body.email]);
-        if (emailCheck?.length) {
-            res.status(400).json({
-                message: "Email is already in use."
-            });
+        const emailCheck = await db.queryOne<{ email: string; }>(buildSelectQuery("email"), [req.body.email]);
+        if (emailCheck) {
+            next(ApiError.badRequest(`Email '${emailCheck.email}' is already in use.`));
             return;
         }
 
