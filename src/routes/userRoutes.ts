@@ -1,21 +1,37 @@
-import { Application, Request, Response } from "express";
+import { setHeaders } from "./../middlewares/setHeaders";
+import { isModerator } from "./../middlewares/authJwt";
+import { allContent, userContent, moderatorContent, adminContent } from "./../controllers/userController";
 import { isAdmin } from "../middlewares/authJwt";
 import { verifyToken } from "../middlewares/authJwt";
+import express, { Router } from "express";
 
-const routes = (app: Application): void => {
-    app.use((req, res, next) => {
-        res.header(
-            "Access-Control-Allow-Headers",
-            "x-access-token, Origin, Content-Type, Accept"
-        );
-        next();
-    });
+const router: Router = express.Router();
 
-    app.get("/api/test/admin", [verifyToken, isAdmin], (req: Request, res: Response) => {
-        res.json({ message: "test admin" });
-    });
-};
+router.use(setHeaders);
 
-export default routes;
+router.get(
+    "/all",
+    allContent
+);
+
+router.get(
+    "/user",
+    [verifyToken],
+    userContent
+);
+
+router.get(
+    "/moderator",
+    [verifyToken, isModerator],
+    moderatorContent
+);
+
+router.get(
+    "/admin",
+    [verifyToken, isAdmin],
+    adminContent
+);
+
+export default router;
 
 

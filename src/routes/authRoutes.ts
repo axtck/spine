@@ -1,18 +1,22 @@
-import { Application, NextFunction, Request, Response } from "express";
+import { setHeaders } from "./../middlewares/setHeaders";
 import { login, signup } from "../controllers/authController";
 import { checkDuplicateUsernameOrEmail, checkRolesExisted } from "../middlewares/verifySignup";
+import express from "express";
 
-const routes = (app: Application): void => {
-    app.use((req: Request, res: Response, next: NextFunction) => {
-        res.header(
-            "Access-Control-Allow-Headers",
-            "x-access-token, Origin, Content-Type, Accept"
-        );
-        next();
-    });
+const router = express.Router();
 
-    app.post("/api/auth/signup", [checkDuplicateUsernameOrEmail, checkRolesExisted], signup);
-    app.post("/api/auth/login", login);
-};
+router.use(setHeaders);
+console.log(router);
 
-export default routes;
+router.post(
+    "/signup",
+    [checkDuplicateUsernameOrEmail, checkRolesExisted],
+    signup
+);
+
+router.post(
+    "/login",
+    login
+);
+
+export default router;
