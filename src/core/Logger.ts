@@ -11,6 +11,10 @@ export class Logger implements ILogger {
         winston.addColors(this.colors);
     }
 
+    public static create(): Logger {
+        return new Logger();
+    }
+
     private get level(): string {
         return (penv.environment === "development") ? "debug" : "warn";
     }

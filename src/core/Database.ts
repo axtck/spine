@@ -27,6 +27,10 @@ export class Database implements IDatabase {
         }
     }
 
+    public static create(logger: ILogger): Database {
+        return new Database(logger);
+    }
+
     /**
      * Perform a query against the database
      * @param {string} sql - SQL query to execute
