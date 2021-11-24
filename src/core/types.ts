@@ -1,4 +1,5 @@
 import { OkPacket, RowDataPacket } from "mysql2";
+import { ApiMethods, Middleware } from "../types";
 
 export type LogMessageTypes = string | number | Record<string, unknown>;
 
@@ -28,4 +29,11 @@ export interface IQueryError {
     sql: string;
     sqlState: string;
     sqlMessage: string;
+}
+
+export interface IControllerRoute {
+    path: string;
+    method: ApiMethods;
+    handler: Middleware;
+    localMiddleware: Middleware[];
 }
