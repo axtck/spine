@@ -1,24 +1,27 @@
 import { Logger } from "./Logger";
 import { Router } from "express";
-import { ApiMethods, Middleware } from "../types";
-import { ILogger } from "./types";
+import { ApiMethods } from "../types";
+import { IControllerRoute, ILogger } from "./types";
+import { Database } from "./Database";
 
-interface IRoute {
-    path: string;
-    method: ApiMethods;
-    handler: Middleware;
-    localMiddleware: Middleware[];
-}
+
 export abstract class Controller {
     public router: Router = Router();
     public abstract path: string;
-    protected abstract readonly routes: IRoute[];
-    private readonly logger: ILogger = new Logger();
+    protected abstract readonly routes: IControllerRoute[];
+    private readonly logger: ILogger;
+    protected database: Database; 
+
+    constructor() {
+        this.logger = new Logger();
+        this.database = new Database(this.logger)
+    }
 
     public setRoutes(): Router {
         for (const route of this.routes) {
-            for (const mw of route.localMiddleware) {
-                this.router.use(route.path, mw);
+            this.logger.info(route.path);
+            for (const middleware of route.localMiddleware) {
+                this.router.use(route.path, middleware);
             }
             switch (route.method) {
                 case ApiMethods.Get:
