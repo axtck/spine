@@ -1,8 +1,8 @@
 import { Application, RequestHandler } from "express";
-import http from "http"
-import {Controller} from "./Controller";
+import { Controller } from "./Controller";
 import { Logger } from "./Logger";
 import { ILogger } from "./types";
+import http from "http";
 
 export default class Server {
     private app: Application;
@@ -30,9 +30,9 @@ export default class Server {
     public loadControllers(basePath: string, controllers: Array<Controller>): void {
         for (const controller of controllers) {
             const fullBasePath = `${basePath}/${controller.path}`; // create the full base path e.g. api/v1/auth
-            const multipleSlashesRegExp = new RegExp(/\/+/, "g")
+            const multipleSlashesRegExp = new RegExp(/\/+/, "g");
             const crashProofPath = fullBasePath.replace(multipleSlashesRegExp, "/");
-            this.logger.info(`Using path ${crashProofPath}`)
+            this.logger.info(`Using path ${crashProofPath}`);
             this.app.use(crashProofPath, controller.setRoutes());
         }
     }
