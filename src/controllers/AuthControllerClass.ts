@@ -14,18 +14,18 @@ export class AuthControllerClass extends Controller {
         super();
     }
 
-    path = "/test";
+    path = "/auth";
     routes: IControllerRoute[] = [
         {
             path: "/signup",
             method: ApiMethods.Post,
-            handler: this.handleSignup,
+            handler: this.handleSignup.bind(this),
             localMiddleware: [checkDuplicateUsernameOrEmail, checkRolesExisted]
         },
         {
             path: "/login",
             method: ApiMethods.Post,
-            handler: this.handleLogin,
+            handler: this.handleLogin.bind(this),
             localMiddleware: []
         }
     ];

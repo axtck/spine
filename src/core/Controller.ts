@@ -10,11 +10,11 @@ export abstract class Controller {
     public abstract path: string;
     protected abstract readonly routes: IControllerRoute[];
     private readonly logger: ILogger;
-    protected database: Database; 
+    protected database: Database;
 
     constructor() {
         this.logger = new Logger();
-        this.database = new Database(this.logger)
+        this.database = new Database(this.logger);
     }
 
     public setRoutes(): Router {
@@ -37,7 +37,7 @@ export abstract class Controller {
                     this.router.delete(route.path, route.handler);
                     break;
                 default:
-                    this.logger.error("Not a valid method");
+                    this.logger.error("Not a valid method.");
                     break;
             }
         }
