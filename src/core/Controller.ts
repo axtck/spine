@@ -1,16 +1,17 @@
 import { Logger } from "./Logger";
 import { Router } from "express";
 import { ApiMethods } from "../types";
-import { IControllerRoute, ILogger } from "./types";
+import { IControllerRoute } from "./types";
 import { Database } from "./Database";
-
+import { Service } from "./Service";
 
 export abstract class Controller {
     public router: Router = Router();
     public abstract path: string;
+    protected abstract service: Service;
     protected abstract readonly routes: IControllerRoute[];
-    private readonly logger: ILogger;
-    protected database: Database;
+    protected readonly logger: Logger;
+    protected readonly database: Database;
 
     constructor() {
         this.logger = new Logger();

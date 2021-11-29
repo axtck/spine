@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response, RequestHandler } from "express";
 import { Controller } from "../core/Controller";
 import { IControllerRoute } from "../core/types";
 import { ApiMethods } from "../types";
@@ -8,12 +8,18 @@ import bcrypt from "bcryptjs";
 import { ApiError } from "../lib/errors/ApiError";
 import { IUserModel } from "../models/UserModel";
 import { checkDuplicateUsernameOrEmail, checkRolesExisted } from "../middlewares/verifySignup";
+import { AuthService } from "../services/AuthService";
 
-export class AuthControllerClass extends Controller {
+interface IAuthControllerClass {
+    handleSignup: RequestHandler;
+}
+
+export class AuthControllerClass extends Controller implements IAuthControllerClass {
     constructor() {
         super();
     }
 
+    service = new AuthService();
     path = "/auth";
     routes: IControllerRoute[] = [
         {
@@ -32,41 +38,22 @@ export class AuthControllerClass extends Controller {
 
     public async handleSignup(req: Request, res: Response, next: NextFunction): Promise<void> {
         const buildSelectIdQuery = (table: string, column: string): string => {
-            return `
-                SELECT 
-                    id
-                FROM ${table} 
-                WHERE ${column} = ?
-            `;
+            return `SELECT id FROM ${table} WHERE ${column} = ?`;
         };
-
-        const createUserQuery = `
-            INSERT INTO users (
-                username,
-                email,
-                password 
-            )
-            VALUES (
-                ?,
-                ?,
-                ?
-            )  
-        `;
 
         const createUserRoleQuery = `
             INSERT INTO user_roles (
                 user_id,
                 role_id
             )
-            VALUES (
-                ?,
-                ?
-            )
+            VALUES (?, ?)
         `;
 
         try {
             const hashedPassword = bcrypt.hashSync(req.body.password, 8);
-            await this.database.query(createUserQuery, [req.body.username, req.body.email, hashedPassword]);
+
+            await this.service.insertUser(req.body.username, req.body.email, hashedPassword);
+
             const createdUser = await this.database.queryOne<{ id: number; }>(buildSelectIdQuery("users", "username"), [req.body.username]);
             if (!createdUser) throw new Error("authController.signup finding user failed.");
 
@@ -85,12 +72,14 @@ export class AuthControllerClass extends Controller {
             });
         }
         catch (e) {
-            this.database.logger.error("Creating user failed.");
-            if (e instanceof Error)
-                ApiError.internal(e.message);
-            throw e;
+            this.database.logger.error("Signup failed.");
+            if (e instanceof ApiError) {
+                next(ApiError.internal("Signup failed"));
+            }
         }
     }
+
+
 
     public async handleLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
         const findUserQuery = `

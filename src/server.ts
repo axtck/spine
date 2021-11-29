@@ -3,7 +3,6 @@ import express, { Application, RequestHandler } from "express";
 const app: Application = express();
 import Server from "./core/Server";
 import { Controller } from "./core/Controller";
-import { TestController } from "./controllers/TestController";
 import { AuthControllerClass } from "./controllers/AuthControllerClass";
 import { apiErrorHandler } from "./middlewares/apiErrorHandler";
 // import setupInitialDatabase from "./lib/database/setupInitialDatabase";
@@ -35,7 +34,6 @@ const globalMiddleWares: Array<RequestHandler> = [
 ];
 
 const controllers: Controller[] = [
-    new TestController(),
     new AuthControllerClass()
 ];
 
