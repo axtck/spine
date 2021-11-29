@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, RequestHandler } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Controller } from "../core/Controller";
 import { IControllerRoute } from "../core/types";
 import { ApiMethods } from "../types";
@@ -10,16 +10,7 @@ import { IUserModel } from "../models/UserModel";
 import { checkDuplicateUsernameOrEmail, checkRolesExisted } from "../middlewares/verifySignup";
 import { AuthService } from "../services/AuthService";
 
-interface IAuthControllerClass {
-    handleSignup: RequestHandler;
-}
-
-export class AuthControllerClass extends Controller implements IAuthControllerClass {
-    constructor() {
-        super();
-    }
-
-    service = new AuthService();
+export class AuthControllerClass extends Controller {
     path = "/auth";
     routes: IControllerRoute[] = [
         {
@@ -35,36 +26,31 @@ export class AuthControllerClass extends Controller implements IAuthControllerCl
             localMiddleware: []
         }
     ];
+    authService = new AuthService();
+
+    constructor() {
+        super();
+    }
 
     public async handleSignup(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const buildSelectIdQuery = (table: string, column: string): string => {
-            return `SELECT id FROM ${table} WHERE ${column} = ?`;
-        };
-
-        const createUserRoleQuery = `
-            INSERT INTO user_roles (
-                user_id,
-                role_id
-            )
-            VALUES (?, ?)
-        `;
-
         try {
+            // create user
             const hashedPassword = bcrypt.hashSync(req.body.password, 8);
+            await this.authService.createUser(req.body.username, req.body.email, hashedPassword);
 
-            await this.service.insertUser(req.body.username, req.body.email, hashedPassword);
-
-            const createdUser = await this.database.queryOne<{ id: number; }>(buildSelectIdQuery("users", "username"), [req.body.username]);
+            // get created user
+            const createdUser = await this.authService.getCreatedUser(req.body.username);
             if (!createdUser) throw new Error("authController.signup finding user failed.");
 
+            // assign roles
             if (req.body.roles) {
                 for (const r of req.body.roles) {
-                    const role = await this.database.queryOne<{ id: number; }>(buildSelectIdQuery("roles", "name"), [r]);
+                    const role = await this.authService.getRole(r);
                     if (!role) throw new Error("authController.signup finding role failed.");
-                    await this.database.query(createUserRoleQuery, [createdUser.id, role.id]);
+                    await this.authService.createUserRole(createdUser.id, role.id);
                 }
             } else {
-                await this.database.query(createUserRoleQuery, [createdUser.id, 1]); // assign 'user' role 
+                await this.authService.createUserRole(createdUser.id, 1); // assign 'user' role 
             }
 
             res.json({
@@ -74,6 +60,7 @@ export class AuthControllerClass extends Controller implements IAuthControllerCl
         catch (e) {
             this.database.logger.error("Signup failed.");
             if (e instanceof ApiError) {
+                this.logger.error(e.message);
                 next(ApiError.internal("Signup failed"));
             }
         }
