@@ -1,5 +1,6 @@
 import { Id, Nullable } from "./../types";
 import { Service } from "../core/Service";
+import { IUserModel } from "../models/UserModel";
 
 export class AuthService extends Service {
 
@@ -26,15 +27,21 @@ export class AuthService extends Service {
         await this.database.query(createUserRoleQuery, [userId, roleId]);
     }
 
-    public async getCreatedUser(username: string): Promise<Nullable<{ id: number; }>> {
-        const getIdQuery = "SELECT id FROM users WHERE username = ?";
-        const foundUser = await this.database.queryOne<{ id: number; }>(getIdQuery, [username]);
+    public async getCreatedUserId(username: string): Promise<Nullable<{ id: number; }>> {
+        const getUserIdQuery = "SELECT id FROM users WHERE username = ?";
+        const foundUser = await this.database.queryOne<{ id: number; }>(getUserIdQuery, [username]);
         return foundUser;
     }
 
     public async getRole(role: string): Promise<Nullable<{ id: number; }>> {
-        const getIdQuery = "SELECT id FROM roles WHERE name = ?";
-        const foundRole = await this.database.queryOne<{ id: number; }>(getIdQuery, [role]);
+        const getRoleIdQuery = "SELECT id FROM roles WHERE name = ?";
+        const foundRole = await this.database.queryOne<{ id: number; }>(getRoleIdQuery, [role]);
         return foundRole;
+    }
+
+    public async getUser(username: string): Promise<Nullable<IUserModel>> {
+        const getUserQuery = "SELECT * FROM users WHERE username = ?";
+        const user = await this.database.queryOne<IUserModel>(getUserQuery, [username]);
+        return user;
     }
 }

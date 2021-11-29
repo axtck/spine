@@ -1,3 +1,4 @@
+import { InfoError } from "./../lib/errors/InfoError";
 import { NextFunction, Request, Response } from "express";
 import { Controller } from "../core/Controller";
 import { IControllerRoute } from "../core/types";
@@ -6,9 +7,9 @@ import penv from "../config/penv";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { ApiError } from "../lib/errors/ApiError";
-import { IUserModel } from "../models/UserModel";
 import { checkDuplicateUsernameOrEmail, checkRolesExisted } from "../middlewares/verifySignup";
 import { AuthService } from "../services/AuthService";
+import path from "path";
 
 export class AuthControllerClass extends Controller {
     path = "/auth";
@@ -39,14 +40,14 @@ export class AuthControllerClass extends Controller {
             await this.authService.createUser(req.body.username, req.body.email, hashedPassword);
 
             // get created user
-            const createdUser = await this.authService.getCreatedUser(req.body.username);
-            if (!createdUser) throw new Error("authController.signup finding user failed.");
+            const createdUser = await this.authService.getCreatedUserId(req.body.username);
+            if (!createdUser) throw new InfoError(this.handleSignup.name, path.basename(__filename), "finding created user");
 
             // assign roles
             if (req.body.roles) {
                 for (const r of req.body.roles) {
                     const role = await this.authService.getRole(r);
-                    if (!role) throw new Error("authController.signup finding role failed.");
+                    if (!role) throw new InfoError(this.handleSignup.name, path.basename(__filename), "finding role");
                     await this.authService.createUserRole(createdUser.id, role.id);
                 }
             } else {
@@ -60,28 +61,20 @@ export class AuthControllerClass extends Controller {
         catch (e) {
             this.database.logger.error("Signup failed.");
             if (e instanceof ApiError) {
-                this.logger.error(e.message);
                 next(ApiError.internal("Signup failed"));
+                return;
             }
         }
+
     }
 
 
 
     public async handleLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const findUserQuery = `
-            SELECT 
-                *
-            FROM users
-            WHERE username = ?
-        `;
-
         try {
-            const user = await this.database.queryOne<IUserModel>(findUserQuery, [req.body.username]);
-            if (!user) {
-                next(ApiError.badRequest(`User ${req.body.username} not found.`));
-                return;
-            }
+            const user = await this.authService.getUser(req.body.username);
+            if (!user) throw new Error(`User ${req.body.username} not found.`);
+
 
             const passwordIsValid: boolean = bcrypt.compareSync(
                 req.body.password,
@@ -123,11 +116,11 @@ export class AuthControllerClass extends Controller {
                 accessToken: token
             });
         } catch (e) {
+            this.logger.error("Login failed.");
             if (e instanceof ApiError) {
                 next(ApiError.internal("Login failed."));
                 return;
             }
-            throw (e);
         }
     }
 }
