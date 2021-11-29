@@ -1,7 +1,5 @@
 // root types
 
-import { Request, Response, NextFunction } from "express";
-
 export interface IInsertResponse {
     warningStatus: number,
     serverStatus: number,
@@ -21,5 +19,3 @@ export enum ApiMethods {
     Put = "PUT",
     Delete = "DELETE"
 }
-
-export type Middleware = (req: Request, res: Response, next: NextFunction) => void | Promise<void>;
