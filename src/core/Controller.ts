@@ -1,5 +1,5 @@
 import { Logger } from "./Logger";
-import { Router } from "express";
+import { Response, Router } from "express";
 import { ApiMethods } from "../types";
 import { IControllerRoute } from "./types";
 import { Database } from "./Database";
@@ -41,5 +41,12 @@ export abstract class Controller {
             }
         }
         return this.router;
+    }
+
+    protected sendSuccess(res: Response, data?: unknown, message?: string): Response {
+        return res.status(200).json({
+            message: message || "Success",
+            payload: data
+        });
     }
 }

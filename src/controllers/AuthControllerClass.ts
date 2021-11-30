@@ -7,6 +7,7 @@ import { ApiMethods } from "../types";
 import { ApiError } from "../lib/errors/ApiError";
 import { checkDuplicateUsernameOrEmail, checkRolesExisted } from "../middlewares/verifySignup";
 import penv from "../config/penv";
+import { ILoginResponse } from "./types";
 
 export class AuthControllerClass extends Controller {
     path = "/auth";
@@ -35,9 +36,7 @@ export class AuthControllerClass extends Controller {
             await this.authService.createUser(req.body.username, req.body.email, req.body.password);
             await this.authService.assignRoles(req.body.username, req.body.roles);
 
-            res.status(200).json({
-                message: "User succesfully created."
-            });
+            this.sendSuccess(res, undefined, `User ${req.body.username} succesfully created.`);
         } catch (e) {
             this.logger.error("Signup failed.");
             if (e instanceof ApiError) {
@@ -60,13 +59,15 @@ export class AuthControllerClass extends Controller {
             const token = this.authService.signToken(user.id, penv.jwtAuthkey);
             const userRoles = await this.authService.getUserRoles(user.id);
 
-            res.status(200).json({
+            const loginResponse: ILoginResponse = {
                 id: user.id,
                 username: user.username,
                 email: user.email,
                 roles: userRoles,
                 accessToken: token
-            });
+            };
+
+            this.sendSuccess(res, loginResponse, `User ${user.username} successfully logged in.`);
         } catch (e) {
             this.logger.error("Login failed.");
             if (e instanceof ApiError) {
