@@ -6,13 +6,10 @@ export interface IRoleModel {
 }
 
 export class UserModel implements IRoleModel {
-    private _name: RoleNames;
 
-    constructor(name: RoleNames) {
-        this._name = name;
-    }
+    public name: RoleNames;
 
-    public get name(): RoleNames {
-        return this._name;
+    constructor(role: IRoleModel) {
+        this.name = role.name;
     }
 }
