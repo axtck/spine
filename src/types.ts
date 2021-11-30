@@ -12,3 +12,10 @@ export interface IInsertResponse {
 export type Id = number;
 
 export type Nullable<T> = T | null;
+
+export enum ApiMethods {
+    Get = "GET",
+    Post = "POST",
+    Put = "PUT",
+    Delete = "DELETE"
+}

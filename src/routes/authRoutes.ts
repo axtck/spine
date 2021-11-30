@@ -6,7 +6,6 @@ import express from "express";
 const router = express.Router();
 
 router.use(setHeaders);
-console.log(router);
 
 router.post(
     "/signup",
