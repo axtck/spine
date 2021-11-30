@@ -3,7 +3,7 @@ import { AuthService } from "./../services/AuthService";
 import { NextFunction, Request, Response } from "express";
 import { Controller } from "../core/Controller";
 import { IControllerRoute } from "../core/types";
-import { ApiMethods } from "../types";
+import { ApiMethods, Nullable } from "../types";
 import { ApiError } from "../lib/errors/ApiError";
 import { checkDuplicateUsernameOrEmail, checkRolesExisted } from "../middlewares/verifySignup";
 import penv from "../config/penv";
@@ -36,7 +36,7 @@ export class AuthControllerClass extends Controller {
             await this.authService.createUser(req.body.username, req.body.email, req.body.password);
             await this.authService.assignRoles(req.body.username, req.body.roles);
 
-            this.sendSuccess(res, undefined, `User ${req.body.username} succesfully created.`);
+            this.sendSuccess(res, undefined, `User "${req.body.username}" succesfully created.`);
         } catch (e) {
             this.logger.error("Signup failed.");
             if (e instanceof ApiError) {
@@ -48,7 +48,11 @@ export class AuthControllerClass extends Controller {
 
     public async handleLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const user: IUserModel = await this.authService.getUserByUsername(req.body.username);
+            const user: Nullable<IUserModel> = await this.authService.getUserByUsername(req.body.username);
+            if (!user) {
+                next(ApiError.unauthorized(`Invalid username "${req.body.username}".`));
+                return;
+            }
 
             const passwordIsValid: boolean = this.authService.validatePassword(req.body.password, user.password);
             if (!passwordIsValid) {
@@ -67,7 +71,7 @@ export class AuthControllerClass extends Controller {
                 accessToken: token
             };
 
-            this.sendSuccess(res, loginResponse, `User ${user.username} successfully logged in.`);
+            this.sendSuccess(res, loginResponse, `User "${user.username}" successfully logged in.`);
         } catch (e) {
             this.logger.error("Login failed.");
             if (e instanceof ApiError) {
