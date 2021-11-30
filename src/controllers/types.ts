@@ -1,4 +1,4 @@
-import { Id } from './../types';
+import { Id } from "./../types";
 
 export interface ILoginResponse {
     id: Id;

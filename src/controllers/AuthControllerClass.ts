@@ -25,7 +25,7 @@ export class AuthControllerClass extends Controller {
             localMiddleware: []
         }
     ];
-    authService = new AuthService();
+    private readonly authService = new AuthService();
 
     constructor() {
         super();

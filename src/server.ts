@@ -4,6 +4,7 @@ const app: Application = express();
 import Server from "./core/Server";
 import { Controller } from "./core/Controller";
 import { AuthControllerClass } from "./controllers/AuthControllerClass";
+import { UserControllerClass } from "./controllers/UserControllerClass";
 import { apiErrorHandler } from "./middlewares/apiErrorHandler";
 // import setupInitialDatabase from "./lib/database/setupInitialDatabase";
 
@@ -34,7 +35,8 @@ const globalMiddleWares: Array<RequestHandler> = [
 ];
 
 const controllers: Controller[] = [
-    new AuthControllerClass()
+    new AuthControllerClass(),
+    new UserControllerClass()
 ];
 
 // setupInitialDatabase().then(() => {
