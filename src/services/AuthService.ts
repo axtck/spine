@@ -1,47 +1,70 @@
+import { IUserModel } from "./../models/UserModel";
 import { Id, Nullable } from "./../types";
+import { AuthRepository } from "./../repositories/AuthRepository";
 import { Service } from "../core/Service";
-import { IUserModel } from "../models/UserModel";
+import { InfoError } from "../lib/errors/InfoError";
+import path from "path";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export class AuthService extends Service {
+    authRepository = new AuthRepository();
+
+    constructor() {
+        super();
+    }
 
     public async createUser(username: string, email: string, password: string): Promise<void> {
-        const createUserQuery = `
-            INSERT INTO users (
-                username,
-                email,
-                password 
-            )
-            VALUES (?, ?, ?)  
-        `;
-        await this.database.query(createUserQuery, [username, email, password]);
+        const hashedPassword: string = bcrypt.hashSync(password, 8); // hash the password using bcrypt
+        await this.authRepository.createUser(username, email, hashedPassword);
     }
 
-    public async createUserRole(userId: Id, roleId: Id): Promise<void> {
-        const createUserRoleQuery = `
-            INSERT INTO user_roles (
-                user_id,
-                role_id
-            )
-            VALUES (?, ?)
-        `;
-        await this.database.query(createUserRoleQuery, [userId, roleId]);
+    public async assignRoles(username: string, roles: Nullable<string[]>): Promise<void> {
+        // get created user
+        const createdUserId: Nullable<{ id: Id; }> = await this.authRepository.getCreatedUserId(username);
+        if (!createdUserId) throw new InfoError(this.assignRoles.name, path.basename(__filename), "finding created user");
+
+        // assign roles
+        if (roles) {
+            for (const r of roles) {
+                const role = await this.authRepository.getRole(r);
+                if (!role) throw new InfoError(this.assignRoles.name, path.basename(__filename), "finding role");
+                await this.authRepository.createUserRole(createdUserId.id, role.id);
+            }
+        } else {
+            await this.authRepository.createUserRole(createdUserId.id, 1); // assign 'user' role 
+        }
     }
 
-    public async getCreatedUserId(username: string): Promise<Nullable<{ id: number; }>> {
-        const getUserIdQuery = "SELECT id FROM users WHERE username = ?";
-        const foundUser = await this.database.queryOne<{ id: number; }>(getUserIdQuery, [username]);
-        return foundUser;
-    }
-
-    public async getRole(role: string): Promise<Nullable<{ id: number; }>> {
-        const getRoleIdQuery = "SELECT id FROM roles WHERE name = ?";
-        const foundRole = await this.database.queryOne<{ id: number; }>(getRoleIdQuery, [role]);
-        return foundRole;
-    }
-
-    public async getUser(username: string): Promise<Nullable<IUserModel>> {
-        const getUserQuery = "SELECT * FROM users WHERE username = ?";
-        const user = await this.database.queryOne<IUserModel>(getUserQuery, [username]);
+    public async getUserByUsername(username: string): Promise<IUserModel> {
+        const user: Nullable<IUserModel> = await this.authRepository.getUser(username);
+        if (!user) throw new Error(`User ${username} not found.`);
         return user;
+    }
+
+    public validatePassword(passwordToValidate: string, passwordToCompareTo: string): boolean {
+        // compare the input passwords with the existing password using bcrypt
+        const passwordIsValid: boolean = bcrypt.compareSync(
+            passwordToValidate,
+            passwordToCompareTo
+        );
+        return passwordIsValid;
+    }
+
+    public signToken(userId: Id, jwtAuthKey: string | undefined): unknown {
+        if (!jwtAuthKey) throw new Error("No JWT Authkey provided.");
+        // sign a token that expires in 1 day
+        const oneDayInS = 60 * 60 * 24;
+        const token = jwt.sign({ id: userId }, jwtAuthKey, {
+            expiresIn: oneDayInS
+        });
+        return token;
+    }
+
+    public async getUserRoles(userId: Id): Promise<string[]> {
+        const userRoles: Nullable<{ name: string; }[]> = await this.authRepository.getUserRoles(userId);
+        if (!userRoles || !userRoles?.length) throw new Error(`No roles found for user with id ${userId}.`);
+        const roleNames: string[] = userRoles.map(r => r.name);
+        return roleNames;
     }
 }
