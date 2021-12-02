@@ -32,7 +32,6 @@ export default class Server {
             const fullBasePath = `${basePath}/${controller.path}`; // create the full base path e.g. api/v1/auth
             const multipleSlashesRegExp = new RegExp(/\/+/, "g");
             const crashProofPath = fullBasePath.replace(multipleSlashesRegExp, "/");
-            this.logger.info(`Using path ${crashProofPath}`);
             this.app.use(crashProofPath, controller.setRoutes());
         }
     }

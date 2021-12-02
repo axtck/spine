@@ -18,7 +18,6 @@ export abstract class Controller {
 
     public setRoutes(): Router {
         for (const route of this.routes) {
-            this.logger.info(route.path);
             for (const middleware of route.localMiddleware) {
                 this.router.use(route.path, middleware);
             }

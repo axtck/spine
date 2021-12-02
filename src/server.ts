@@ -3,7 +3,6 @@ import Server from "./core/Server";
 import { Controller } from "./core/Controller";
 import { AuthControllerClass } from "./controllers/AuthControllerClass";
 import { UserControllerClass } from "./controllers/UserControllerClass";
-import { Logger } from "./core/Logger";
 import { apiErrorHandler } from "./middlewares/apiErrorHandler";
 
 const app: Application = express();
@@ -29,10 +28,8 @@ const controllers: Controller[] = [
     new UserControllerClass()
 ];
 
-// setupInitialDatabase().then(() => {
 server.listEnv();
 server.loadGlobalMiddlewares(globalMiddleWares);
 server.loadControllers("/api/v1/", controllers);
 server.listen();
 app.use(apiErrorHandler);
-// });
