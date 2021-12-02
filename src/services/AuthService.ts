@@ -8,7 +8,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export class AuthService extends Service {
-    authRepository = new AuthRepository();
+    private readonly authRepository = new AuthRepository();
 
     constructor() {
         super();
@@ -36,9 +36,8 @@ export class AuthService extends Service {
         }
     }
 
-    public async getUserByUsername(username: string): Promise<IUserModel> {
+    public async getUserByUsername(username: string): Promise<Nullable<IUserModel>> {
         const user: Nullable<IUserModel> = await this.authRepository.getUser(username);
-        if (!user) throw new Error(`User ${username} not found.`);
         return user;
     }
 
@@ -63,7 +62,7 @@ export class AuthService extends Service {
 
     public async getUserRoles(userId: Id): Promise<string[]> {
         const userRoles: Nullable<{ name: string; }[]> = await this.authRepository.getUserRoles(userId);
-        if (!userRoles || !userRoles?.length) throw new Error(`No roles found for user with id ${userId}.`);
+        if (!userRoles || !userRoles?.length) throw new Error(`No roles found for user with id "${userId}".`);
         const roleNames: string[] = userRoles.map(r => r.name);
         return roleNames;
     }

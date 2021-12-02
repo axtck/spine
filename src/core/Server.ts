@@ -3,21 +3,21 @@ import { Controller } from "./Controller";
 import { Logger } from "./Logger";
 import { ILogger } from "./types";
 import http from "http";
+import { transformJSON } from "../lib/functions/logging";
+import penv from "../config/penv";
 
 export default class Server {
     private app: Application;
-    private readonly port: number;
     private readonly logger: ILogger;
 
-    constructor(app: Application, port: number) {
+    constructor(app: Application) {
         this.logger = new Logger();
         this.app = app;
-        this.port = port;
     }
 
     public listen(): http.Server {
-        return this.app.listen(this.port, () => {
-            this.logger.info(`Listening on ${this.port}.`);
+        return this.app.listen(penv.port, () => {
+            this.logger.info(`Listening on ${penv.port}.`);
         });
     }
 
@@ -32,8 +32,11 @@ export default class Server {
             const fullBasePath = `${basePath}/${controller.path}`; // create the full base path e.g. api/v1/auth
             const multipleSlashesRegExp = new RegExp(/\/+/, "g");
             const crashProofPath = fullBasePath.replace(multipleSlashesRegExp, "/");
-            this.logger.info(`Using path ${crashProofPath}`);
             this.app.use(crashProofPath, controller.setRoutes());
         }
+    }
+
+    public listEnv(): void {
+        this.logger.info(`Environment variables:\n${transformJSON(penv)}`);
     }
 }

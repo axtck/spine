@@ -15,10 +15,10 @@
         "quotes": [
             "warn",
             "double"
-        ],
-        "@typescript-eslint/no-floating-promises": [
-            "error"
-        ],
-        "require-await": "error"
+        ]
+        // "@typescript-eslint/no-floating-promises": [
+        //     "error"
+        // ],
+        // "require-await": "error"
     }
 }
