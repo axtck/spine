@@ -11,25 +11,25 @@ export class UserControllerClass extends Controller {
     routes: IControllerRoute[] = [
         {
             path: "/all",
-            method: ApiMethods.Post,
+            method: ApiMethods.Get,
             handler: this.handleAllContent.bind(this),
             localMiddleware: []
         },
         {
             path: "/user",
-            method: ApiMethods.Post,
+            method: ApiMethods.Get,
             handler: this.handleUserContent.bind(this),
             localMiddleware: [verifyToken]
         },
         {
             path: "/admin",
-            method: ApiMethods.Post,
+            method: ApiMethods.Get,
             handler: this.handleAdminContent.bind(this),
             localMiddleware: [verifyToken, isAdmin]
         },
         {
             path: "/moderator",
-            method: ApiMethods.Post,
+            method: ApiMethods.Get,
             handler: this.handleModeratorContent.bind(this),
             localMiddleware: [verifyToken, isModerator]
         }
