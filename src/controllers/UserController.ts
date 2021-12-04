@@ -1,12 +1,12 @@
-import { isModerator } from "./../middlewares/authJwt";
-import { UserService } from "./../services/UserService";
+import { isModerator } from "../middlewares/authJwt";
+import { UserService } from "../services/UserService";
 import { Request, Response } from "express";
 import { Controller } from "../core/Controller";
 import { IControllerRoute } from "../core/types";
 import { ApiMethods } from "../types";
 import { isAdmin, verifyToken } from "../middlewares/authJwt";
 
-export class UserControllerClass extends Controller {
+export class UserController extends Controller {
     path = "/content";
     routes: IControllerRoute[] = [
         {
