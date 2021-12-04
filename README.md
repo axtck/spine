@@ -1,6 +1,19 @@
-# Snorflax
+# Spine
 
-***ZZZ***
+***Starting point for a solid back-end with authentication system***
+
+---
+
+## Technologies
+
+- **Runtime**: NodeJS
+- **Backend framework**: Express
+- **Programming language**: TypeScript
+- **Database**: MySQL (mysql2 node driver)
+- **Logging**: Winston
+- **Testing**: Jest
+- **Authentication method**: JWT
+- **Design pattern**: Repository-Service-Controller
 
 ---
 
@@ -8,7 +21,7 @@
 
 #### Database
 * Set up the dev database (preferably with Docker).
-> ```docker run -d --name mysql-snorflax -v $HOME/dockervols/mysql-snorflax:/var/lib/mysql/ -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_DATABASE=dev  --restart unless-stopped -p 3307:3306 mysql:8 --default-authentication-plugin=mysql_native_password```
+> ```docker run -d --name mysql-spine -v $HOME/dockervols/mysql-spine:/var/lib/mysql/ -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_DATABASE=dev --restart unless-stopped -p 3307:3306 mysql:8 --default-authentication-plugin=mysql_native_password```
 
 #### Environment variables
 * Copy the `.sample.env` file in `./` and rename it as `.env` and change the variables where needed. 
