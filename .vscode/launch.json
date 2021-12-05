@@ -2,21 +2,37 @@
     "version": "0.2.0",
     "configurations": [
         {
-            // meta
             "name": "Launch Server",
             "type": "pwa-node",
+            "program": "${workspaceFolder}/src/server.ts",
             "request": "launch",
-            // extra options
             "console": "integratedTerminal",
-            "internalConsoleOptions": "openOnFirstSessionStart",
             "smartStep": true,
             "sourceMaps": true,
             "cwd": "${workspaceRoot}",
-            // program
-            "program": "${workspaceFolder}/src/server.ts",
             "skipFiles": [
                 "<node_internals>/**"
             ]
+        },
+        {
+            "name": "Run current test",
+            "type": "pwa-node",
+            "program": "${workspaceFolder}/node_modules/.bin/jest",
+            "request": "launch",
+            "args": [
+                "${fileDirname}${pathSeparator}${fileBasename}",
+                "--config",
+                "jest.config.js",
+                "--outputFile",
+                "${fileDirname}${pathSeparator}${fileBasenameNoExtension}.output.json"
+            ],
+            "console": "integratedTerminal",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "windows": {
+                "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+            }
         }
     ]
 }

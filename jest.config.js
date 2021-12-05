@@ -1,8 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+/* eslint-disable no-undef */
 // Sync object
+/** @type {import('@jest/types').Config.InitialOptions} */
 const config = {
-    verbose: true
+    verbose: true,
+    testEnvironment: "node",
+    collectCoverage: true,
+    testTimeout: 1000 * 60 * 30,
+    roots: ["<rootDir>/src/"],
+    testMatch: ["**/?(*.)+(spec|test).ts?(x)"]
 };
-exports.default = config;
-//# sourceMappingURL=jest.config.js.map
+
+module.exports = config;
