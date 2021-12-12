@@ -20,7 +20,7 @@
             "program": "${workspaceFolder}/node_modules/.bin/jest",
             "request": "launch",
             "args": [
-                "${fileDirname}${pathSeparator}${fileBasename}",
+                "${fileBasename}",
                 "--config",
                 "jest.config.js",
                 "--outputFile",
