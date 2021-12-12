@@ -1,5 +1,5 @@
-import { IUserModel } from "./../models/UserModel";
-import { AuthService } from "./../services/AuthService";
+import { IUserModel } from "../models/UserModel";
+import { AuthService } from "../services/AuthService";
 import { NextFunction, Request, Response } from "express";
 import { Controller } from "../core/Controller";
 import { IControllerRoute } from "../core/types";
@@ -9,7 +9,7 @@ import { checkDuplicateUsernameOrEmail, checkRolesExisted } from "../middlewares
 import penv from "../config/penv";
 import { ILoginResponse } from "./types";
 
-export class AuthControllerClass extends Controller {
+export class AuthController extends Controller {
     path = "/auth";
     routes: IControllerRoute[] = [
         {
@@ -25,9 +25,8 @@ export class AuthControllerClass extends Controller {
             localMiddleware: []
         }
     ];
-    private readonly authService = new AuthService();
 
-    constructor() {
+    constructor(private readonly authService: AuthService = new AuthService()) {
         super();
     }
 

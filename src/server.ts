@@ -1,17 +1,15 @@
 import express, { Application, RequestHandler } from "express";
 import Server from "./core/Server";
 import { Controller } from "./core/Controller";
-import { AuthControllerClass } from "./controllers/AuthControllerClass";
-import { UserControllerClass } from "./controllers/UserControllerClass";
+import { AuthController } from "./controllers/AuthController";
+import { UserController } from "./controllers/UserController";
 import { apiErrorHandler } from "./middlewares/apiErrorHandler";
-
-const app: Application = express();
-const server: Server = new Server(app);
-
-// dependencies
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
+
+const app: Application = express();
+const server: Server = new Server(app);
 
 const globalMiddleWares: Array<RequestHandler> = [
     morgan("dev"),
@@ -24,12 +22,13 @@ const globalMiddleWares: Array<RequestHandler> = [
 ];
 
 const controllers: Controller[] = [
-    new AuthControllerClass(),
-    new UserControllerClass()
+    new AuthController(),
+    new UserController()
 ];
 
 server.listEnv();
 server.loadGlobalMiddlewares(globalMiddleWares);
 server.loadControllers("/api/v1/", controllers);
-server.listen();
 app.use(apiErrorHandler);
+
+server.listen();

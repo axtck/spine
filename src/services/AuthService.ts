@@ -8,9 +8,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export class AuthService extends Service {
-    private readonly authRepository = new AuthRepository();
-
-    constructor() {
+    constructor(private readonly authRepository: AuthRepository = new AuthRepository()) {
         super();
     }
 
