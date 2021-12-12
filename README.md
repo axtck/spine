@@ -12,6 +12,7 @@
 - **Database**: MySQL (mysql2 node driver)
 - **Logging**: Winston
 - **Testing**: Jest
+- **Mocking**: Sinon
 - **Authentication method**: JWT
 - **Design pattern**: Repository-Service-Controller
 
