@@ -1,6 +1,9 @@
 {
     "root": true,
     "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
     "plugins": [
         "@typescript-eslint"
     ],
@@ -15,10 +18,10 @@
         "quotes": [
             "warn",
             "double"
+        ],
+        "no-console": "warn",
+        "@typescript-eslint/no-floating-promises": [
+            "error"
         ]
-        // "@typescript-eslint/no-floating-promises": [
-        //     "error"
-        // ],
-        // "require-await": "error"
     }
 }
