@@ -1,5 +1,5 @@
 const config = {
-    verbose: true,
+    verbose: false,
     testEnvironment: "node",
     collectCoverage: true,
     testTimeout: 1000 * 60 * 30,
