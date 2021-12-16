@@ -1,5 +1,5 @@
-import { IUserModel } from "./../../models/UserModel";
-import { IRoleModel } from "../../models/RoleModel";
+import { IUserModel } from "../../../models/UserModel";
+import { IRoleModel } from "../../../models/RoleModel";
 
 export const userRoles: IRoleModel[] = [
     {
@@ -15,6 +15,10 @@ export const userRoles: IRoleModel[] = [
         name: "moderator"
     }
 ];
+
+export const dummyUserRole: IRoleModel = userRoles[0];
+export const dummyAdminRole: IRoleModel = userRoles[1];
+export const dummyModeratorRole: IRoleModel = userRoles[2];
 
 export const baseUsers: IUserModel[] = [
     {
@@ -36,3 +40,7 @@ export const baseUsers: IUserModel[] = [
         password: "moderator"
     }
 ];
+
+export const dummyUser: IUserModel = baseUsers[0];
+export const dummyAdmin: IUserModel = baseUsers[1];
+export const dummyModerator: IUserModel = baseUsers[2];
