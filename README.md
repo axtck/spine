@@ -9,7 +9,7 @@
 - **Runtime**: NodeJS
 - **Backend framework**: Express
 - **Programming language**: TypeScript
-- **Database**: MySQL (mysql2 node driver)
+- **Database**: MySQL (npm/mysql2 NodeJS driver)
 - **Logging**: Winston
 - **Testing**: Jest
 - **Mocking**: Sinon
