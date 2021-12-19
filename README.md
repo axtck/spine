@@ -13,6 +13,7 @@
 - **Logging**: Winston
 - **Testing**: Jest
 - **Mocking**: Sinon
+- **Linting**: ESLint
 - **Authentication method**: JWT
 - **Design pattern**: Repository-Service-Controller
 
