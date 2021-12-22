@@ -11,6 +11,7 @@ export default class Server {
     constructor(app: Application) {
         this.logger = new Logger();
         this.app = app;
+        this.listEnv();
     }
 
     public listen(): http.Server {

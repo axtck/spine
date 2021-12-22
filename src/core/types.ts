@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import { OkPacket, RowDataPacket } from "mysql2";
 import { ApiMethods } from "../types";
 
-export type LogMessageTypes = string | number | Record<string, unknown>;
+export type LogMessageTypes = string | number | Record<string, unknown> | unknown;
 
 export interface IPerson {
     name: string;
