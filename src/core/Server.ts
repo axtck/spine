@@ -1,14 +1,12 @@
 import { Application, RequestHandler } from "express";
 import { Controller } from "./Controller";
 import { Logger } from "./Logger";
-import { ILogger } from "./types";
 import http from "http";
-import { transformJSON } from "../lib/functions/logging";
-import penv from "../config/penv";
+import { penv } from "../config/penv";
 
 export default class Server {
-    private app: Application;
-    private readonly logger: ILogger;
+    private readonly app: Application;
+    private readonly logger: Logger;
 
     constructor(app: Application) {
         this.logger = new Logger();
@@ -16,8 +14,8 @@ export default class Server {
     }
 
     public listen(): http.Server {
-        return this.app.listen(penv.port, () => {
-            this.logger.info(`Listening on ${penv.port}.`);
+        return this.app.listen(penv.app.port, () => {
+            this.logger.info(`Listening on ${penv.app.port}.`);
         });
     }
 
@@ -37,6 +35,6 @@ export default class Server {
     }
 
     public listEnv(): void {
-        this.logger.info(`Environment variables:\n${transformJSON(penv)}`);
+        this.logger.info(`Environment variables: ${JSON.stringify(penv)}`);
     }
 }

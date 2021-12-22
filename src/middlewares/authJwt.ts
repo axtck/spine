@@ -1,12 +1,10 @@
 import { Database } from "./../core/Database";
-import { Logger } from "./../core/Logger";
 import jwt from "jsonwebtoken";
-import penv from "../config/penv";
+import { penv } from "../config/penv";
 import { NextFunction, Request, Response } from "express";
 import { ApiError } from "../lib/errors/ApiError";
 
-const logger = new Logger;
-const db = new Database(logger);
+const db = new Database();
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction): Response | void => {
     const token = req.header("x-access-token");
@@ -16,9 +14,9 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): Re
         return;
     }
 
-    if (!penv.jwtAuthkey) throw new Error("No JWT Authkey provided.");
+    if (!penv.auth.jwtAuthkey) throw new Error("No JWT Authkey provided.");
 
-    jwt.verify(token, penv.jwtAuthkey, (err, decoded) => {
+    jwt.verify(token, penv.auth.jwtAuthkey, (err, decoded) => {
         if (err) {
             next(ApiError.unauthorized("Token authorization failed."));
             return;

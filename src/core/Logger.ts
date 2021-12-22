@@ -1,9 +1,9 @@
-import { ILogger, LogMessageTypes } from "./types";
+import { LogMessageTypes } from "./types";
 import winston from "winston";
-import penv from "../config/penv";
+import { penv } from "../config/penv";
 import { Constants } from "../Constants";
 
-export class Logger implements ILogger {
+export class Logger {
     private levels = Constants.logLevels;
     private colors = Constants.logColors;
 
@@ -16,7 +16,7 @@ export class Logger implements ILogger {
     }
 
     private get level(): string {
-        return (penv.environment === "development") ? "debug" : "warn";
+        return (penv.app.environment === "development") ? "debug" : "warn";
     }
 
     private format = winston.format.combine(

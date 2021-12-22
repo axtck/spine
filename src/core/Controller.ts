@@ -13,7 +13,7 @@ export abstract class Controller {
 
     constructor() {
         this.logger = new Logger();
-        this.database = new Database(this.logger);
+        this.database = new Database();
     }
 
     public setRoutes(): Router {

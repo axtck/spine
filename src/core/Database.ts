@@ -1,23 +1,23 @@
+import { Logger } from "./Logger";
 import { Nullable } from "./../types";
-import { transformJSON } from "./../lib/functions/logging";
 import mysql, { Pool } from "mysql2/promise";
-import penv from "../config/penv";
-import { DbQueryResult, IDatabase, ILogger } from "./types";
+import { penv } from "../config/penv";
+import { DbQueryResult } from "./types";
 
-export class Database implements IDatabase {
-    logger: ILogger;
+export class Database {
+    private readonly logger: Logger;
     pool: Pool;
 
-    constructor(logger: ILogger) {
-        this.logger = logger;
+    constructor() {
+        this.logger = new Logger();
         try {
             // create pool
             this.pool = mysql.createPool({
-                host: penv.mysqlHost,
-                port: penv.mysqlPort,
-                user: penv.mysqlUser,
-                password: penv.mysqlPw,
-                database: penv.mysqlDb
+                host: penv.db.mysqlHost,
+                port: penv.db.mysqlPort,
+                user: penv.db.mysqlUser,
+                password: penv.db.mysqlPw,
+                database: penv.db.mysqlDb
             });
         } catch (e) {
             if (e instanceof Error) {
@@ -25,10 +25,6 @@ export class Database implements IDatabase {
             }
             throw e;
         }
-    }
-
-    public static create(logger: ILogger): Database {
-        return new Database(logger);
     }
 
     /**
@@ -44,7 +40,7 @@ export class Database implements IDatabase {
             return result;
         } catch (e) {
             if (e instanceof Error) {
-                this.logger.error(`Executing query failed.\nInfo:\n${transformJSON(e)}\nJSON:\n${JSON.stringify(e)}`);
+                this.logger.error(`Executing query failed. Info: ${JSON.stringify(e)}`);
             }
             throw e;
         }

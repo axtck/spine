@@ -5,7 +5,7 @@ import { InitialDatabaseConstants } from "../lib/InitialDatabaseConstants";
 import { ApiError } from "../lib/errors/ApiError";
 
 const logger = new Logger();
-const db = new Database(logger);
+const db = new Database();
 
 export const checkDuplicateUsernameOrEmail = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const buildSelectQuery = (column: string) => {

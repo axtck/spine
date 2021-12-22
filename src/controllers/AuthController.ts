@@ -6,7 +6,7 @@ import { IControllerRoute } from "../core/types";
 import { ApiMethods, Nullable } from "../types";
 import { ApiError } from "../lib/errors/ApiError";
 import { checkDuplicateUsernameOrEmail, checkRolesExisted } from "../middlewares/verifySignup";
-import penv from "../config/penv";
+import { penv } from "../config/penv";
 import { ILoginResponse } from "./types";
 
 export class AuthController extends Controller {
@@ -59,7 +59,7 @@ export class AuthController extends Controller {
                 return;
             }
 
-            const token = this.authService.signToken(user.id, penv.jwtAuthkey);
+            const token = this.authService.signToken(user.id, penv.auth.jwtAuthkey);
             const userRoles = await this.authService.getUserRoles(user.id);
 
             const loginResponse: ILoginResponse = {

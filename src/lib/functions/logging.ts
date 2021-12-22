@@ -1,7 +1,7 @@
-export const transformJSON = (obj: unknown): string => {
+export const transformKeyValueJSON = (jsonData: unknown): string => {
     // split
     const splitRegex = new RegExp(/,"/);
-    const splitted = JSON.stringify(obj).split(splitRegex);
+    const splitted = JSON.stringify(jsonData).split(splitRegex);
 
     // join and remove quotes
     const replaceRegex = new RegExp(/["]/, "g");
