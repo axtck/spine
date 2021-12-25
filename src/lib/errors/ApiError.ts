@@ -21,6 +21,8 @@ export class ApiError extends Error {
         return new ApiError(400, msg, "Bad Request");
     }
 
+    // similar to 403 Forbidden, but specifically for use when 
+    // authentication is required and has failed or has not yet been provided
     static unauthorized(msg: string): ApiError {
         return new ApiError(401, msg, "Unauthorized");
     }

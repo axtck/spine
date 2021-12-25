@@ -1,42 +1,49 @@
-import { isModerator } from "../middlewares/authJwt";
+import { AuthJwtMiddleware } from "./../middlewares/AuthJwtMiddleware";
 import { UserService } from "../services/UserService";
 import { Request, Response } from "express";
 import { Controller } from "../core/Controller";
 import { IControllerRoute } from "../core/types";
-import { ApiMethods } from "../types";
-import { isAdmin, verifyToken } from "../middlewares/authJwt";
+import { HttpMethod } from "../types";
 
 export class UserController extends Controller {
-    path = "/content";
-    routes: IControllerRoute[] = [
+    public path = "/content";
+    private readonly authJwtMiddleware: AuthJwtMiddleware = new AuthJwtMiddleware();
+    protected readonly routes: IControllerRoute[] = [
         {
             path: "/all",
-            method: ApiMethods.Get,
+            method: HttpMethod.Get,
             handler: this.handleAllContent.bind(this),
             localMiddleware: []
         },
         {
             path: "/user",
-            method: ApiMethods.Get,
+            method: HttpMethod.Get,
             handler: this.handleUserContent.bind(this),
-            localMiddleware: [verifyToken]
+            localMiddleware: [
+                this.authJwtMiddleware.verifyToken
+            ]
         },
         {
             path: "/admin",
-            method: ApiMethods.Get,
+            method: HttpMethod.Get,
             handler: this.handleAdminContent.bind(this),
-            localMiddleware: [verifyToken, isAdmin]
+            localMiddleware: [
+                this.authJwtMiddleware.verifyToken,
+                this.authJwtMiddleware.isAdmin
+            ]
         },
         {
             path: "/moderator",
-            method: ApiMethods.Get,
+            method: HttpMethod.Get,
             handler: this.handleModeratorContent.bind(this),
-            localMiddleware: [verifyToken, isModerator]
+            localMiddleware: [
+                this.authJwtMiddleware.verifyToken,
+                this.authJwtMiddleware.isModerator
+            ]
         }
     ];
-    private readonly userService = new UserService();
 
-    constructor() {
+    constructor(private readonly userService: UserService = new UserService()) {
         super();
     }
 

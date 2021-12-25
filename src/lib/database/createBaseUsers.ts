@@ -2,7 +2,7 @@ import { InitialDatabaseConstants } from "../InitialDatabaseConstants";
 import { Database } from "../../core/Database";
 import { Logger } from "../../core/Logger";
 const logger = new Logger();
-const db = new Database(logger);
+const db = new Database();
 
 const createBaseUsers = async (): Promise<void> => {
     const createUsersTableQuery = `
@@ -32,7 +32,7 @@ const createBaseUsers = async (): Promise<void> => {
     try {
         await db.query(createUsersTableQuery);
         await db.query(insertBaseUsersQuery);
-        db.logger.info("Creating base users succeeded.");
+        logger.info("Creating base users succeeded.");
     } catch (e) {
         logger.error("Creating base users failed.");
         throw e;

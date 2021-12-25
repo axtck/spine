@@ -1,9 +1,10 @@
-import { ILogger, LogMessageTypes } from "./types";
+import { LogMessageTypes } from "./types";
 import winston from "winston";
-import penv from "../config/penv";
+import { penv } from "../config/penv";
 import { Constants } from "../Constants";
+import path from "path";
 
-export class Logger implements ILogger {
+export class Logger {
     private levels = Constants.logLevels;
     private colors = Constants.logColors;
 
@@ -11,29 +12,25 @@ export class Logger implements ILogger {
         winston.addColors(this.colors);
     }
 
-    public static create(): Logger {
-        return new Logger();
-    }
-
     private get level(): string {
-        return (penv.environment === "development") ? "debug" : "warn";
+        return penv.app.environment === "development" ? "debug" : "warn";
     }
 
     private format = winston.format.combine(
-        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss:ms" }),
-        winston.format.colorize({ all: true }),
-        winston.format.printf(
-            (info) => `${info.timestamp} ${info.level}: ${info.message}`
-        )
+        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+        winston.format.colorize({ level: true }),
+        winston.format.printf(({ timestamp, level, message }) => {
+            return `${timestamp} ${level}: ${message}`;
+        })
     );
 
     private transports = [
         new winston.transports.Console(),
         new winston.transports.File({
-            filename: "./log/error.log",
+            filename: path.join(".", "log", "error.log"),
             level: "error"
         }),
-        new winston.transports.File({ filename: "./log/all.log" })
+        new winston.transports.File({ filename: path.join(".", "log", "all.log") })
     ];
 
     private logger = winston.createLogger({

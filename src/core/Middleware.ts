@@ -1,7 +1,7 @@
 import { Logger } from "./Logger";
 import { Database } from "./Database";
 
-export abstract class Repository {
+export abstract class Middleware {
     protected readonly logger: Logger;
     protected readonly database: Database;
 

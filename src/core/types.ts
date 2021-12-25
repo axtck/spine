@@ -1,20 +1,8 @@
 import { RequestHandler } from "express";
 import { OkPacket, RowDataPacket } from "mysql2";
-import { ApiMethods } from "../types";
+import { HttpMethod } from "../types";
 
-export type LogMessageTypes = string | number | Record<string, unknown>;
-
-export interface ILogger {
-    error(message: LogMessageTypes): void;
-    warn(message: LogMessageTypes): void;
-    info(message: LogMessageTypes): void;
-    http(message: LogMessageTypes): void;
-    debug(message: LogMessageTypes): void;
-}
-
-export interface IDatabase {
-    logger: ILogger;
-}
+export type LogMessageTypes = string | number | Record<string, unknown> | unknown;
 
 export interface IPerson {
     name: string;
@@ -34,7 +22,7 @@ export interface IQueryError {
 
 export interface IControllerRoute {
     path: string;
-    method: ApiMethods;
+    method: HttpMethod;
     handler: RequestHandler;
     localMiddleware: RequestHandler[];
 }

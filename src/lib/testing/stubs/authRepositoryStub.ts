@@ -34,10 +34,10 @@ authRepositoryStub.getUser.withArgs(moderator.username).resolves(moderator);
 authRepositoryStub.getUser.withArgs("").resolves(null);
 
 // get user roles
-authRepositoryStub.getUserRoles.withArgs(user.id).resolves([{ name: userRole.name }]);
-authRepositoryStub.getUserRoles.withArgs(admin.id).resolves([{ name: adminRole.name }]);
-authRepositoryStub.getUserRoles.withArgs(moderator.id).resolves([{ name: moderatorRole.name }]);
-authRepositoryStub.getUserRoles.withArgs(0).resolves(null);
+authRepositoryStub.getUserRoleNames.withArgs(user.id).resolves([{ name: userRole.name }]);
+authRepositoryStub.getUserRoleNames.withArgs(admin.id).resolves([{ name: adminRole.name }]);
+authRepositoryStub.getUserRoleNames.withArgs(moderator.id).resolves([{ name: moderatorRole.name }]);
+authRepositoryStub.getUserRoleNames.withArgs(0).resolves(null);
 
 export {
     authRepositoryStub

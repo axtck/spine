@@ -1,3 +1,4 @@
+import { UserRole } from "./types";
 // constants
 export class Constants {
     static readonly logLevels = {
@@ -15,4 +16,8 @@ export class Constants {
         http: "magenta",
         debug: "white"
     };
+
+    static readonly userRoles: UserRole[] = [
+        UserRole.User, UserRole.Admin, UserRole.Moderator
+    ];
 }

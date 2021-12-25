@@ -26,7 +26,6 @@ const controllers: Controller[] = [
     new UserController()
 ];
 
-server.listEnv();
 server.loadGlobalMiddlewares(globalMiddleWares);
 server.loadControllers("/api/v1/", controllers);
 app.use(apiErrorHandler);

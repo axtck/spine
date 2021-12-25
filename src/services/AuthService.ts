@@ -2,8 +2,6 @@ import { IUserModel } from "./../models/UserModel";
 import { Id, Nullable } from "./../types";
 import { AuthRepository } from "./../repositories/AuthRepository";
 import { Service } from "../core/Service";
-import { InfoError } from "../lib/errors/InfoError";
-import path from "path";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -20,13 +18,13 @@ export class AuthService extends Service {
     public async assignRoles(username: string, roles: Nullable<string[]>): Promise<void> {
         // get created user
         const createdUserId: Nullable<{ id: Id; }> = await this.authRepository.getCreatedUserId(username);
-        if (!createdUserId) throw new InfoError(this.assignRoles.name, path.basename(__filename), "finding created user");
+        if (!createdUserId) throw new Error("finding created user failed");
 
         // assign roles
         if (roles) {
             for (const r of roles) {
                 const role = await this.authRepository.getRole(r);
-                if (!role) throw new InfoError(this.assignRoles.name, path.basename(__filename), "finding role");
+                if (!role) throw new Error("finding role failed");
                 await this.authRepository.createUserRole(createdUserId.id, role.id);
             }
         } else {
@@ -49,7 +47,7 @@ export class AuthService extends Service {
     }
 
     public signToken(userId: Id, jwtAuthKey: string | undefined): unknown {
-        if (!jwtAuthKey) throw new Error("No JWT Authkey provided.");
+        if (!jwtAuthKey) throw new Error("no JWT Authkey provided");
         // sign a token that expires in 1 day
         const oneDayInS = 60 * 60 * 24;
         const token = jwt.sign({ id: userId }, jwtAuthKey, {
@@ -58,10 +56,20 @@ export class AuthService extends Service {
         return token;
     }
 
-    public async getUserRoles(userId: Id): Promise<string[]> {
-        const userRoles: Nullable<{ name: string; }[]> = await this.authRepository.getUserRoles(userId);
-        if (!userRoles || !userRoles?.length) throw new Error(`No roles found for user with id "${userId}".`);
+    public async getUserRoleNames(userId: Id): Promise<string[]> {
+        const userRoles: Nullable<Array<{ name: string; }>> = await this.authRepository.getUserRoleNames(userId);
+        if (!userRoles || !userRoles.length) throw new Error(`no roles found for user with id '${userId}'`);
         const roleNames: string[] = userRoles.map(r => r.name);
         return roleNames;
+    }
+
+    public async getDuplicateUsernameId(username: string): Promise<Nullable<{ id: Id; }>> {
+        const duplicateUserId: Nullable<{ id: Id; }> = await this.authRepository.getDuplicateUsernameId(username);
+        return duplicateUserId;
+    }
+
+    public async getDuplicateEmailId(email: string): Promise<Nullable<{ id: Id; }>> {
+        const duplicateUserId: Nullable<{ id: Id; }> = await this.authRepository.getDuplicateEmailId(email);
+        return duplicateUserId;
     }
 }
