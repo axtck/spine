@@ -1,6 +1,6 @@
 import { Logger } from "./Logger";
 import { Response, Router } from "express";
-import { ApiMethods } from "../types";
+import { HttpMethod } from "../types";
 import { IControllerRoute } from "./types";
 import { Database } from "./Database";
 
@@ -22,16 +22,16 @@ export abstract class Controller {
                 this.router.use(route.path, middleware);
             }
             switch (route.method) {
-                case ApiMethods.Get:
+                case HttpMethod.Get:
                     this.router.get(route.path, route.handler);
                     break;
-                case ApiMethods.Post:
+                case HttpMethod.Post:
                     this.router.post(route.path, route.handler);
                     break;
-                case ApiMethods.Put:
+                case HttpMethod.Put:
                     this.router.put(route.path, route.handler);
                     break;
-                case ApiMethods.Delete:
+                case HttpMethod.Delete:
                     this.router.delete(route.path, route.handler);
                     break;
                 default:

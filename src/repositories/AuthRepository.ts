@@ -56,7 +56,19 @@ export class AuthRepository extends Repository {
                 ON ur.role_id = r.id
             WHERE user_id = ?
         `;
-        const userRoles: Nullable<{ name: string; }[]> = await this.database.query<{ name: string; }>(getUserRolesQuery, [userId]);
+        const userRoles: Nullable<Array<{ name: string; }>> = await this.database.query<{ name: string; }>(getUserRolesQuery, [userId]);
         return userRoles;
+    }
+
+    public async getDuplicateUsernameId(username: string): Promise<Nullable<{ id: Id; }>> {
+        const getDuplicateQuery: QueryString = "SELECT id FROM users WHERE username = ?";
+        const duplicateUserId = await this.database.queryOne<{ id: Id; }>(getDuplicateQuery, [username]);
+        return duplicateUserId;
+    }
+
+    public async getDuplicateEmailId(email: string): Promise<Nullable<{ id: Id; }>> {
+        const getDuplicateQuery: QueryString = "SELECT id FROM users WHERE username = ?";
+        const duplicateUserId = await this.database.queryOne<{ id: Id; }>(getDuplicateQuery, [email]);
+        return duplicateUserId;
     }
 }

@@ -62,4 +62,14 @@ export class AuthService extends Service {
         const roleNames: string[] = userRoles.map(r => r.name);
         return roleNames;
     }
+
+    public async getDuplicateUsernameId(username: string): Promise<Nullable<{ id: Id; }>> {
+        const duplicateUserId: Nullable<{ id: Id; }> = await this.authRepository.getDuplicateUsernameId(username);
+        return duplicateUserId;
+    }
+
+    public async getDuplicateEmailId(email: string): Promise<Nullable<{ id: Id; }>> {
+        const duplicateUserId: Nullable<{ id: Id; }> = await this.authRepository.getDuplicateEmailId(email);
+        return duplicateUserId;
+    }
 }

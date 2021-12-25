@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import { OkPacket, RowDataPacket } from "mysql2";
-import { ApiMethods } from "../types";
+import { HttpMethod } from "../types";
 
 export type LogMessageTypes = string | number | Record<string, unknown> | unknown;
 
@@ -22,7 +22,7 @@ export interface IQueryError {
 
 export interface IControllerRoute {
     path: string;
-    method: ApiMethods;
+    method: HttpMethod;
     handler: RequestHandler;
     localMiddleware: RequestHandler[];
 }

@@ -1,27 +1,31 @@
+import { VerifySignupMiddleware } from "./../middlewares/VerifySignupMiddleware";
 import { IUserModel } from "../models/UserModel";
 import { AuthService } from "../services/AuthService";
 import { NextFunction, Request, Response } from "express";
 import { Controller } from "../core/Controller";
 import { IControllerRoute } from "../core/types";
-import { ApiMethods, Nullable } from "../types";
+import { HttpMethod, Nullable } from "../types";
 import { ApiError } from "../lib/errors/ApiError";
-import { checkDuplicateUsernameOrEmail, checkRolesExisted } from "../middlewares/verifySignup";
 import { penv } from "../config/penv";
 import { ILoginResponse } from "./types";
 
 export class AuthController extends Controller {
     public path = "/auth";
+    private readonly verifySignupMiddleware: VerifySignupMiddleware = new VerifySignupMiddleware();
     protected readonly routes: IControllerRoute[] = [
         {
             path: "/signup",
-            method: ApiMethods.Post,
+            method: HttpMethod.Post,
             handler: this.handleSignup.bind(this),
-            localMiddleware: [checkDuplicateUsernameOrEmail, checkRolesExisted]
+            localMiddleware: [
+                this.verifySignupMiddleware.checkDuplicateUsernameOrEmail,
+                this.verifySignupMiddleware.checkRolesExisted
+            ]
         },
         {
             path: "/login",
-            method: ApiMethods.Post,
-            handler: this.handleLogin,
+            method: HttpMethod.Post,
+            handler: this.handleLogin.bind(this),
             localMiddleware: []
         }
     ];

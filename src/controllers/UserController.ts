@@ -3,7 +3,7 @@ import { UserService } from "../services/UserService";
 import { Request, Response } from "express";
 import { Controller } from "../core/Controller";
 import { IControllerRoute } from "../core/types";
-import { ApiMethods } from "../types";
+import { HttpMethod } from "../types";
 
 export class UserController extends Controller {
     public path = "/content";
@@ -11,13 +11,13 @@ export class UserController extends Controller {
     protected readonly routes: IControllerRoute[] = [
         {
             path: "/all",
-            method: ApiMethods.Get,
+            method: HttpMethod.Get,
             handler: this.handleAllContent.bind(this),
             localMiddleware: []
         },
         {
             path: "/user",
-            method: ApiMethods.Get,
+            method: HttpMethod.Get,
             handler: this.handleUserContent.bind(this),
             localMiddleware: [
                 this.authJwtMiddleware.verifyToken
@@ -25,7 +25,7 @@ export class UserController extends Controller {
         },
         {
             path: "/admin",
-            method: ApiMethods.Get,
+            method: HttpMethod.Get,
             handler: this.handleAdminContent.bind(this),
             localMiddleware: [
                 this.authJwtMiddleware.verifyToken,
@@ -34,7 +34,7 @@ export class UserController extends Controller {
         },
         {
             path: "/moderator",
-            method: ApiMethods.Get,
+            method: HttpMethod.Get,
             handler: this.handleModeratorContent.bind(this),
             localMiddleware: [
                 this.authJwtMiddleware.verifyToken,

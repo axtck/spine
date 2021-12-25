@@ -6,7 +6,6 @@ import { Middleware } from "../core/Middleware";
 import jwt from "jsonwebtoken";
 
 export class AuthJwtMiddleware extends Middleware {
-
     private readonly authService: AuthService = new AuthService();
 
     constructor() {
