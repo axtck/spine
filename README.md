@@ -39,7 +39,12 @@ npm run watch # start watcher
 ```
 
 #### Debugging
-
 * Install [Visual Studio Code](https://code.visualstudio.com/)
 * Start watcher (`npm run watch`)
 * In [VS Code Run and Debug](https://code.visualstudio.com/docs/editor/debugging), select `Launch Server` and press ▶️
+
+#### Things to keep in mind
+* Follow the design pattern
+* JS / TS classes are just syntactic sugar (mind the `this` context for using class methods as middleware (bind with `bind(this)` or use `() => {}`))
+* Type as much as possible
+
