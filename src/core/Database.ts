@@ -41,10 +41,10 @@ export class Database {
         }
     }
 
-    public async queryOne<T>(sql: string, options?: Array<string | number>): Promise<Nullable<T>> {
-        const result = await this.query<T>(sql, options);
+    public async queryOne<T>(sql: string, parameters?: Array<string | number>): Promise<Nullable<T>> {
+        const result = await this.query<T>(sql, parameters);
         if (!result || !result.length) return null;
-        if (result.length < 1) throw new Error(`more than one row for query: ${sql}${options ? `\noptions: ${JSON.stringify(options)}` : ""} ${sql}.`);
+        if (result.length < 1) throw new Error(`more than one row for query: ${sql}${parameters ? `\noptions: ${JSON.stringify(parameters)}` : ""} ${sql}.`);
         return result[0];
     }
 }

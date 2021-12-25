@@ -56,9 +56,9 @@ export class AuthService extends Service {
         return token;
     }
 
-    public async getUserRoles(userId: Id): Promise<string[]> {
-        const userRoles: Nullable<{ name: string; }[]> = await this.authRepository.getUserRoles(userId);
-        if (!userRoles || !userRoles?.length) throw new Error(`no roles found for user with id "${userId}"`);
+    public async getUserRoleNames(userId: Id): Promise<string[]> {
+        const userRoles: Nullable<Array<{ name: string; }>> = await this.authRepository.getUserRoleNames(userId);
+        if (!userRoles || !userRoles.length) throw new Error(`no roles found for user with id '${userId}'`);
         const roleNames: string[] = userRoles.map(r => r.name);
         return roleNames;
     }

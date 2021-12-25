@@ -35,7 +35,7 @@ export abstract class Controller {
                     this.router.delete(route.path, route.handler);
                     break;
                 default:
-                    this.logger.error("Not a valid method.");
+                    this.logger.error("not a valid method");
                     break;
             }
         }

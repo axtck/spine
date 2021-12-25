@@ -10,8 +10,8 @@ import { penv } from "../config/penv";
 import { ILoginResponse } from "./types";
 
 export class AuthController extends Controller {
-    path = "/auth";
-    routes: IControllerRoute[] = [
+    public path = "/auth";
+    protected readonly routes: IControllerRoute[] = [
         {
             path: "/signup",
             method: ApiMethods.Post,
@@ -21,7 +21,7 @@ export class AuthController extends Controller {
         {
             path: "/login",
             method: ApiMethods.Post,
-            handler: this.handleLogin.bind(this),
+            handler: this.handleLogin,
             localMiddleware: []
         }
     ];
@@ -61,7 +61,7 @@ export class AuthController extends Controller {
             }
 
             const token = this.authService.signToken(user.id, penv.auth.jwtAuthkey);
-            const userRoles = await this.authService.getUserRoles(user.id);
+            const userRoles = await this.authService.getUserRoleNames(user.id);
 
             const loginResponse: ILoginResponse = {
                 id: user.id,

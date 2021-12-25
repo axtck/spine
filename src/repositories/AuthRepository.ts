@@ -45,7 +45,7 @@ export class AuthRepository extends Repository {
         return user;
     }
 
-    public async getUserRoles(userId: Id): Promise<Nullable<{ name: string; }[]>> {
+    public async getUserRoleNames(userId: Id): Promise<Nullable<{ name: string; }[]>> {
         const getUserRolesQuery: QueryString = `
             SELECT 
                 r.name 
