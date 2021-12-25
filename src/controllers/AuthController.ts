@@ -35,13 +35,14 @@ export class AuthController extends Controller {
             await this.authService.createUser(req.body.username, req.body.email, req.body.password);
             await this.authService.assignRoles(req.body.username, req.body.roles);
 
-            this.sendSuccess(res, undefined, `User "${req.body.username}" succesfully created.`);
+            this.sendSuccess(res, undefined, `user '${req.body.username}' succesfully created`);
         } catch (e) {
-            this.logger.error("Signup failed.");
-            if (e instanceof ApiError) {
-                next(ApiError.internal("Signup failed"));
+            if (e instanceof Error) {
+                next(ApiError.internal(`signup failed: ${e.message}`));
                 return;
             }
+            next(ApiError.internal(`signup failed: ${e}`));
+            return;
         }
     }
 
@@ -49,13 +50,13 @@ export class AuthController extends Controller {
         try {
             const user: Nullable<IUserModel> = await this.authService.getUserByUsername(req.body.username);
             if (!user) {
-                next(ApiError.unauthorized(`Invalid username "${req.body.username}".`));
+                next(ApiError.unauthorized(`user '${req.body.username}' not found`));
                 return;
             }
 
             const passwordIsValid: boolean = this.authService.validatePassword(req.body.password, user.password);
             if (!passwordIsValid) {
-                next(ApiError.unauthorized("Invalid password."));
+                next(ApiError.unauthorized(`invalid password for user '${req.body.username}'`));
                 return;
             }
 
@@ -70,13 +71,14 @@ export class AuthController extends Controller {
                 accessToken: token
             };
 
-            this.sendSuccess(res, loginResponse, `User "${user.username}" successfully logged in.`);
+            this.sendSuccess(res, loginResponse, `user '${user.username}' successfully logged in`);
         } catch (e) {
-            this.logger.error("Login failed.");
-            if (e instanceof ApiError) {
-                next(ApiError.internal("Login failed."));
+            if (e instanceof Error) {
+                next(ApiError.internal(`login failed: ${e.message}`));
                 return;
             }
+            next(ApiError.internal(`login failed: ${e}`));
+            return;
         }
     }
 }

@@ -44,7 +44,7 @@ export abstract class Controller {
 
     protected sendSuccess(res: Response, data?: unknown, message?: string): Response {
         return res.status(200).json({
-            message: message || "Success",
+            message: message || "success",
             payload: data
         });
     }

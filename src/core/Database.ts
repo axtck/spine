@@ -6,60 +6,45 @@ import { DbQueryResult } from "./types";
 
 export class Database {
     private readonly logger: Logger;
-    pool: Pool;
 
     constructor() {
         this.logger = new Logger();
-        try {
-            // create pool
-            this.pool = mysql.createPool({
-                host: penv.db.mysqlHost,
-                port: penv.db.mysqlPort,
-                user: penv.db.mysqlUser,
-                password: penv.db.mysqlPw,
-                database: penv.db.mysqlDb
-            });
-        } catch (e) {
-            if (e instanceof Error) {
-                this.logger.error(`Creating pool failed.\nMessage: ${e.message}`);
-            }
-            throw e;
-        }
     }
 
-    /**
-     * Perform a query against the database
-     * @param {string} sql - SQL query to execute
-     * @param {unknown=} options - options for query
-     * @return {PromiseLike<DbQueryResult<T[]>>} - promise that resolves in an array of rows 
-     */
-    async query<T>(sql: string, options?: unknown): Promise<DbQueryResult<Nullable<T[]>>> {
+    private createPool(): Pool {
+        const pool = mysql.createPool({
+            host: penv.db.mysqlHost,
+            port: penv.db.mysqlPort,
+            user: penv.db.mysqlUser,
+            password: penv.db.mysqlPw,
+            database: penv.db.mysqlDb
+        });
+        return pool;
+    }
+
+    public async query<T>(sql: string, parameters?: Array<string | number>): Promise<Nullable<DbQueryResult<T[]>>> {
         try {
-            this.logger.info(`Executing query:\n${sql}${options ? `\nWith options:\n${JSON.stringify(options)}` : ""}`);
-            const [result] = await this.pool.query<DbQueryResult<T[]>>(sql, options);
+            this.logger.info(`executing query: ${sql}${parameters ? `\noptions: ${JSON.stringify(parameters)}` : ""}`);
+
+            const pool: Pool = this.createPool();
+            const [result] = await pool.query<DbQueryResult<T[]>>(sql, parameters);
+
+            if (!result || !result.length) return null;
             return result;
         } catch (e) {
             if (e instanceof Error) {
-                this.logger.error(`Executing query failed. Info: ${JSON.stringify(e)}`);
+                this.logger.error(`executing query failed: ${e.message}`);
+            } else {
+                this.logger.error(`executing query failed: ${e}`);
             }
-            throw e;
+            return null;
         }
     }
 
-    /**
-     * Perform a unique query against the database
-     * @param {string} sql - SQL query to execute
-     * @param {unknown=} options - options for query
-     * @return {PromiseLike<T>} - promise that resolves in a single row 
-     */
-    async queryOne<T>(sql: string, options?: unknown): Promise<Nullable<T>> {
+    public async queryOne<T>(sql: string, options?: Array<string | number>): Promise<Nullable<T>> {
         const result = await this.query<T>(sql, options);
-        if (!result?.length) {
-            return null;
-        }
-        if (result.length < 1) {
-            throw new Error(`More than one row for query ${sql}.`);
-        }
+        if (!result || !result.length) return null;
+        if (result.length < 1) throw new Error(`more than one row for query: ${sql}${options ? `\noptions: ${JSON.stringify(options)}` : ""} ${sql}.`);
         return result[0];
     }
 }

@@ -12,4 +12,11 @@ export const transformKeyValueJSON = (jsonData: unknown): string => {
     // remove brackets
     const result = joined.slice(1, joined.length - 1);
     return result;
-}
+};
+
+export const validateParameters = (sql: string, parameters: Array<string | number>): boolean => {
+    const count = (sql.match(/\?/g) || []).length; // count ? occurences
+    const nOptions = parameters.length; // count options
+
+    return count === nOptions;
+};

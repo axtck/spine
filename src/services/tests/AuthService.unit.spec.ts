@@ -1,15 +1,14 @@
-import { InfoError } from "./../../lib/errors/InfoError";
 import { AuthService } from "./../AuthService";
 import sinon from "sinon";
 import { authRepositoryStub } from "../../lib/testing/stubs/authRepositoryStub";
-import { 
-    dummyUser, dummyAdmin, dummyModerator, 
+import {
+    dummyUser, dummyAdmin, dummyModerator,
     dummyUserRole, dummyAdminRole, dummyModeratorRole
 } from "../../lib/testing/data/dummies";
 
 
 describe("AuthService", () => {
-        describe("assignRoles", () => {
+    describe("assignRoles", () => {
         const authService: AuthService = new AuthService(authRepositoryStub);
 
         it("should assign user role (user role specified)", async () => {
@@ -34,12 +33,12 @@ describe("AuthService", () => {
 
         it("should not assign role (no created user found)", async () => {
             await expect(authService.assignRoles("", [dummyModeratorRole.name]))
-                .rejects.toThrow(InfoError);
+                .rejects.toThrow();
         });
 
         it("should not assign role (no role found)", async () => {
             await expect(authService.assignRoles("admin", [""]))
-                .rejects.toThrow(InfoError);
+                .rejects.toThrow();
         });
     });
 });
