@@ -20,8 +20,7 @@
             "double"
         ],
         "no-console": "warn",
-        "@typescript-eslint/no-floating-promises": [
-            "error"
-        ]
+        "@typescript-eslint/no-floating-promises": "error",
+        "@typescript-eslint/explicit-function-return-type": "warn"
     }
 }
