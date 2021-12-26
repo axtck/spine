@@ -1,3 +1,4 @@
+import { Database } from "./Database";
 import { Application, RequestHandler } from "express";
 import { Controller } from "./Controller";
 import { Logger } from "./Logger";
@@ -6,12 +7,13 @@ import { penv } from "../config/penv";
 
 export default class Server {
     private readonly app: Application;
+    private readonly database: Database;
     private readonly logger: Logger;
 
     constructor(app: Application) {
+        this.database = new Database();
         this.logger = new Logger();
         this.app = app;
-        this.listEnv();
     }
 
     public listen(): http.Server {
@@ -35,5 +37,9 @@ export default class Server {
 
     public listEnv(): void {
         this.logger.debug(`environment variables: ${JSON.stringify(penv)}`);
+    }
+
+    public async initDb(): Promise<void> {
+        await this.database.createDatabase();
     }
 }

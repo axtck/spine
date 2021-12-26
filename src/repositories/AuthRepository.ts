@@ -19,8 +19,8 @@ export class AuthRepository extends Repository {
     public async createUserRole(userId: Id, roleId: Id): Promise<void> {
         const createUserRoleQuery: QueryString = `
             INSERT INTO user_roles (
-                user_id,
-                role_id
+                userId,
+                roleId
             )
             VALUES (?, ?)
         `;
@@ -51,10 +51,10 @@ export class AuthRepository extends Repository {
                 r.name 
             FROM users u 
             LEFT JOIN user_roles ur 
-                ON u.id = ur.user_id
+                ON u.id = ur.userId
             LEFT JOIN roles r 
                 ON ur.role_id = r.id
-            WHERE user_id = ?
+            WHERE userId = ?
         `;
         const userRoles: Nullable<Array<{ name: string; }>> = await this.database.query<{ name: string; }>(getUserRolesQuery, [userId]);
         return userRoles;

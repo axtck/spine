@@ -1,3 +1,5 @@
+import { createDatabaseIfNotExists } from "../lib/data/helpers/initializeDatabase";
+import { createInitialTables } from "../lib/data/helpers/initializeDatabase";
 import { Logger } from "./Logger";
 import { Nullable } from "./../types";
 import mysql, { Pool } from "mysql2/promise";
@@ -46,5 +48,12 @@ export class Database {
         if (!result || !result.length) return null;
         if (result.length < 1) throw new Error(`more than one row for query: ${sql}${parameters ? `\noptions: ${JSON.stringify(parameters)}` : ""} ${sql}.`);
         return result[0];
+    }
+
+    public async createDatabase(): Promise<void> {
+        const createResult: void | "existed" = await createDatabaseIfNotExists(penv.db.mysqlDb);
+        if (createResult === "existed") return;
+
+        await createInitialTables(); // if database didn't exist yet, create tables
     }
 }
