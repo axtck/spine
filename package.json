@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run build && node dist/server.js",
-    "build": "rimraf ./dist && npx tsc",
     "lint": "eslint . --ext .ts",
+    "build": "rimraf ./dist && npx tsc",
     "watch": "npx tsc --watch",
     "test": "jest"
   },

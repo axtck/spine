@@ -1,5 +1,6 @@
 import express, { Application, RequestHandler } from "express";
 import Server from "./core/Server";
+import { Logger } from "./core/Logger";
 import { Controller } from "./core/Controller";
 import { AuthController } from "./controllers/AuthController";
 import { UserController } from "./controllers/UserController";
@@ -10,8 +11,9 @@ import cors from "cors";
 
 const app: Application = express();
 const server: Server = new Server(app);
+const logger: Logger = new Logger();
 
-const globalMiddleWares: Array<RequestHandler> = [
+const globalMiddleWares: RequestHandler[] = [
     morgan("dev"),
     helmet(),
     cors({
@@ -26,8 +28,16 @@ const controllers: Controller[] = [
     new UserController()
 ];
 
-server.loadGlobalMiddlewares(globalMiddleWares);
-server.loadControllers("/api/v1/", controllers);
-app.use(apiErrorHandler);
-
-server.listen();
+server.initDb().then(() => {
+    server.listEnv();
+    server.loadGlobalMiddlewares(globalMiddleWares);
+    server.loadControllers("/api/v1", controllers);
+    app.use(apiErrorHandler);
+    server.listen();
+}).catch((e: unknown) => {
+    if (e instanceof Error) {
+        logger.error(`initializing database failed: ${e.message}`);
+    } else {
+        logger.error(`initializing database failed: ${e}`);
+    }
+});

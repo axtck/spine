@@ -4,6 +4,6 @@ export interface ILoginResponse {
     id: Id;
     username: string;
     email: string;
-    roles: Array<string>;
+    roles: string[];
     accessToken: unknown;
 }

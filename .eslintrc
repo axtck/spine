@@ -21,6 +21,12 @@
         ],
         "no-console": "warn",
         "@typescript-eslint/no-floating-promises": "error",
-        "@typescript-eslint/explicit-function-return-type": "warn"
+        "@typescript-eslint/explicit-function-return-type": "warn",
+        "@typescript-eslint/array-type": [
+            "warn",
+            {
+                "default": "array-simple"
+            }
+        ]
     }
 }

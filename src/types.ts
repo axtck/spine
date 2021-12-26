@@ -27,3 +27,11 @@ export enum UserRole {
     Admin = "admin",
     Moderator = "moderator"
 }
+
+export enum Environment {
+    Development = "development",
+    Staging = "staging",
+    Production = "production"
+}
+
+export type Environments = `${Environment}`;

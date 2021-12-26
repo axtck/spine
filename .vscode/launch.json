@@ -9,7 +9,6 @@
             "console": "integratedTerminal",
             "smartStep": true,
             "sourceMaps": true,
-            "cwd": "${workspaceRoot}",
             "skipFiles": [
                 "<node_internals>/**"
             ]
@@ -17,7 +16,7 @@
         {
             "name": "Debug current test",
             "type": "pwa-node",
-            "program": "${workspaceFolder}/node_modules/.bin/jest",
+            "program": "${workspaceFolder}/node_modules/jest/bin/jest",
             "request": "launch",
             "args": [
                 "${fileBasename}",
@@ -29,10 +28,7 @@
             "console": "integratedTerminal",
             "skipFiles": [
                 "<node_internals>/**"
-            ],
-            "windows": {
-                "program": "${workspaceFolder}/node_modules/jest/bin/jest"
-            }
+            ]
         }
     ]
 }
