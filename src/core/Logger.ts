@@ -14,7 +14,8 @@ export class Logger {
     }
 
     private get level(): string {
-        return penv.app.environment === Environment.Development ? "debug" : "warn";
+        // decide what to log in what environment (log all in dev, otherwise info, warn, error)
+        return penv.app.environment === Environment.Development ? "debug" : "info";
     }
 
     private format = winston.format.combine(

@@ -16,7 +16,7 @@ export default class Server {
 
     public listen(): http.Server {
         return this.app.listen(penv.app.port, () => {
-            this.logger.info(`Listening on ${penv.app.port}.`);
+            this.logger.debug(`listening on ${penv.app.port}`);
         });
     }
 
@@ -28,12 +28,12 @@ export default class Server {
 
     public loadControllers(basePath: string, controllers: Controller[]): void {
         for (const controller of controllers) {
-            const controllerPath = `${basePath}/${controller.path}`.replace(/\/+/, "/"); // create the full base path e.g. api/v1/auth
+            const controllerPath = `${basePath}/${controller.path}`.replace(/\/+/g, "/"); // create the full base path e.g. api/v1/auth
             this.app.use(controllerPath, controller.setRoutes());
         }
     }
 
     public listEnv(): void {
-        this.logger.info(`Environment variables: ${JSON.stringify(penv)}`);
+        this.logger.debug(`environment variables: ${JSON.stringify(penv)}`);
     }
 }

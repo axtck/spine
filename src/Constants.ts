@@ -14,7 +14,7 @@ export class Constants {
         warn: "yellow",
         info: "green",
         http: "magenta",
-        debug: "white"
+        debug: "cyan"
     };
 
     static readonly userRoles: UserRole[] = [
