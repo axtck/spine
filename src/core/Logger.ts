@@ -1,3 +1,4 @@
+import { Environment } from "./../types";
 import { LogMessageTypes } from "./types";
 import winston from "winston";
 import { penv } from "../config/penv";
@@ -13,7 +14,7 @@ export class Logger {
     }
 
     private get level(): string {
-        return penv.app.environment === "development" ? "debug" : "warn";
+        return penv.app.environment === Environment.Development ? "debug" : "warn";
     }
 
     private format = winston.format.combine(

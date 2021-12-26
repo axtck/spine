@@ -20,18 +20,16 @@ export default class Server {
         });
     }
 
-    public loadGlobalMiddlewares(middlewares: Array<RequestHandler>): void {
+    public loadGlobalMiddlewares(middlewares: RequestHandler[]): void {
         for (const middleware of middlewares) {
             this.app.use(middleware);
         }
     }
 
-    public loadControllers(basePath: string, controllers: Array<Controller>): void {
+    public loadControllers(basePath: string, controllers: Controller[]): void {
         for (const controller of controllers) {
-            const fullBasePath = `${basePath}/${controller.path}`; // create the full base path e.g. api/v1/auth
-            const multipleSlashesRegExp = new RegExp(/\/+/, "g");
-            const crashProofPath = fullBasePath.replace(multipleSlashesRegExp, "/");
-            this.app.use(crashProofPath, controller.setRoutes());
+            const controllerPath = `${basePath}/${controller.path}`.replace(/\/+/, "/"); // create the full base path e.g. api/v1/auth
+            this.app.use(controllerPath, controller.setRoutes());
         }
     }
 

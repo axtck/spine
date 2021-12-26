@@ -9,7 +9,6 @@
             "console": "integratedTerminal",
             "smartStep": true,
             "sourceMaps": true,
-            "cwd": "${workspaceRoot}",
             "skipFiles": [
                 "<node_internals>/**"
             ]

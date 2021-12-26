@@ -11,7 +11,7 @@ import cors from "cors";
 const app: Application = express();
 const server: Server = new Server(app);
 
-const globalMiddleWares: Array<RequestHandler> = [
+const globalMiddleWares: RequestHandler[] = [
     morgan("dev"),
     helmet(),
     cors({
@@ -27,7 +27,6 @@ const controllers: Controller[] = [
 ];
 
 server.loadGlobalMiddlewares(globalMiddleWares);
-server.loadControllers("/api/v1/", controllers);
+server.loadControllers("/api/v1", controllers);
 app.use(apiErrorHandler);
-
 server.listen();
