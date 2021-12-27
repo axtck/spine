@@ -23,7 +23,7 @@
 
 #### Database
 * Set up the dev database (preferably with Docker).
-> ```docker run -d --name mysql-spine -v $HOME/dockervols/mysql-spine:/var/lib/mysql/ -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_DATABASE=dev --restart unless-stopped -p 3307:3306 mysql:8 --default-authentication-plugin=mysql_native_password```
+> ```docker run -d --name mysql-spine -v $HOME/dockervols/mysql-spine:/var/lib/mysql/ -e MYSQL_ROOT_PASSWORD=admin --restart unless-stopped -p 3307:3306 mysql:8 --default-authentication-plugin=mysql_native_password```
 
 #### Environment variables
 * Copy the `.sample.env` file in `./` and rename it as `.env` and change the variables where needed. 
