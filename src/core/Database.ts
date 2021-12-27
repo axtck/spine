@@ -51,9 +51,8 @@ export class Database {
     }
 
     public async createDatabase(): Promise<void> {
-        const createResult: void | "existed" = await createDatabaseIfNotExists(penv.db.mysqlDb);
-        if (createResult === "existed") return;
-
+        const createResult: void | { exists: boolean; } = await createDatabaseIfNotExists(penv.db.mysqlDb);
+        if (createResult && createResult.exists) return;
         await createInitialTables(); // if database didn't exist yet, create tables
     }
 }

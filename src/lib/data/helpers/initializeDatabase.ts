@@ -5,7 +5,7 @@ import path from "path";
 import { penv } from "../../../config/penv";
 import { DbQueryResult } from "../../../core/types";
 
-export const createDatabaseIfNotExists = async (dbName: string): Promise<void | "existed"> => {
+export const createDatabaseIfNotExists = async (dbName: string): Promise<void | { exists: boolean; }> => {
     const logger: Logger = new Logger();
     try {
         // don't specify database
@@ -20,7 +20,9 @@ export const createDatabaseIfNotExists = async (dbName: string): Promise<void | 
 
         if (dbs && dbs.length) {
             logger.debug(`database '${penv.db.mysqlDb}' not created (exists)`);
-            return "existed";
+            return {
+                exists: true
+            };
         }
 
         await connection.query(`CREATE DATABASE IF NOT EXISTS ${dbName}`);
