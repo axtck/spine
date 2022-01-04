@@ -5,6 +5,7 @@ import { Controller } from "./core/Controller";
 import { AuthController } from "./controllers/AuthController";
 import { UserController } from "./controllers/UserController";
 import { apiErrorHandler } from "./middlewares/apiErrorHandler";
+import { lazyHandleException } from "./lib/functions/exceptionHandling";
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
@@ -35,9 +36,5 @@ server.initDb().then(() => {
     app.use(apiErrorHandler);
     server.listen();
 }).catch((e: unknown) => {
-    if (e instanceof Error) {
-        logger.error(`initializing database failed: ${e.message}`);
-    } else {
-        logger.error(`initializing database failed: ${e}`);
-    }
+    lazyHandleException(e, "initializing database failed", logger);
 });

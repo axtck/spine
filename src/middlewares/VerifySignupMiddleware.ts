@@ -1,3 +1,4 @@
+import { lazyHandleException } from "../lib/functions/exceptionHandling";
 import { Constants } from "./../Constants";
 import { UserRole } from "./../types";
 import { ApiError } from "./../lib/errors/ApiError";
@@ -28,11 +29,7 @@ export class VerifySignupMiddleware extends Middleware {
 
             next();
         } catch (e) {
-            if (e instanceof Error) {
-                this.logger.error(`verifying signup failed: ${e.message}`);
-            } else {
-                this.logger.error(e);
-            }
+            lazyHandleException(e, "verifying signup failed", this.logger);
         }
     };
 
