@@ -17,13 +17,13 @@ export class VerifySignupMiddleware extends Middleware {
         try {
             const duplicateUsername = await this.authService.getDuplicateUsernameId(req.body.username);
             if (duplicateUsername) {
-                next(ApiError.badRequest(`username '${req.body.username}' is already in use`));
+                next(ApiError.badRequest(`username '${req.body.username}' already in use`));
                 return;
             }
 
             const duplicateEmail = await this.authService.getDuplicateEmailId(req.body.email);
             if (duplicateEmail) {
-                next(ApiError.badRequest(`email '${req.body.email}' is already in use`));
+                next(ApiError.badRequest(`email '${req.body.email}' already in use`));
                 return;
             }
 

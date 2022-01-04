@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
   `name` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
 );
+-- something is wrong with this fk
 CREATE TABLE IF NOT EXISTS `user_roles` (
   `id` int NOT NULL AUTO_INCREMENT,
   `userId` int NOT NULL,
