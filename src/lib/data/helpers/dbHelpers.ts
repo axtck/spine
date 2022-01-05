@@ -1,3 +1,4 @@
+import { lazyHandleException } from "../../functions/exceptionHandling";
 import mysql, { Connection } from "mysql2/promise";
 import { Logger } from "../../../core/Logger";
 import fs from "fs";
@@ -24,10 +25,6 @@ export const executeSqlFromFile = async (sqlFilePath: string): Promise<void> => 
         await connection.query(sql);
         logger.debug(`executing query from file succeeded: ${sql}`);
     } catch (e) {
-        if (e instanceof Error) {
-            logger.error(`executing query from file failed: ${e.message}`);
-        } else {
-            logger.error(`executing query from file failed: ${e}`);
-        }
+        lazyHandleException(e, "executing query from file failed", logger);
     }
 };

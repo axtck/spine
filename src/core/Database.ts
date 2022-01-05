@@ -1,3 +1,4 @@
+import { lazyHandleException } from "../lib/functions/exceptionHandling";
 import { createDatabaseIfNotExists } from "../lib/data/helpers/initializeDatabase";
 import { createInitialTables } from "../lib/data/helpers/initializeDatabase";
 import { Logger } from "./Logger";
@@ -34,11 +35,7 @@ export class Database {
             if (!result || !result.length) return null;
             return result;
         } catch (e) {
-            if (e instanceof Error) {
-                this.logger.error(`executing query failed: ${e.message}`);
-            } else {
-                this.logger.error(`executing query failed: ${e}`);
-            }
+            lazyHandleException(e, "executing query failed", this.logger);
             return null;
         }
     }

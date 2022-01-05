@@ -1,3 +1,4 @@
+import { lazyHandleException } from "../lib/functions/exceptionHandling";
 import { Constants } from "./../Constants";
 import { UserRole } from "./../types";
 import { ApiError } from "./../lib/errors/ApiError";
@@ -16,23 +17,19 @@ export class VerifySignupMiddleware extends Middleware {
         try {
             const duplicateUsername = await this.authService.getDuplicateUsernameId(req.body.username);
             if (duplicateUsername) {
-                next(ApiError.badRequest(`username '${req.body.username}' is already in use`));
+                next(ApiError.badRequest(`username '${req.body.username}' already in use`));
                 return;
             }
 
             const duplicateEmail = await this.authService.getDuplicateEmailId(req.body.email);
             if (duplicateEmail) {
-                next(ApiError.badRequest(`email '${req.body.email}' is already in use`));
+                next(ApiError.badRequest(`email '${req.body.email}' already in use`));
                 return;
             }
 
             next();
         } catch (e) {
-            if (e instanceof Error) {
-                this.logger.error(`verifying signup failed: ${e.message}`);
-            } else {
-                this.logger.error(e);
-            }
+            lazyHandleException(e, "verifying signup failed", this.logger);
         }
     };
 

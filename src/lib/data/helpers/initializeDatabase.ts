@@ -1,3 +1,4 @@
+import { lazyHandleException } from "../../functions/exceptionHandling";
 import { Logger } from "./../../../core/Logger";
 import mysql, { Connection } from "mysql2/promise";
 import { executeSqlFromFile } from "./dbHelpers";
@@ -28,11 +29,7 @@ export const createDatabaseIfNotExists = async (dbName: string): Promise<void | 
         await connection.query(`CREATE DATABASE IF NOT EXISTS ${dbName}`);
         logger.debug(`created database '${dbName}'`);
     } catch (e) {
-        if (e instanceof Error) {
-            logger.error(`creating database failed: ${e.message}`);
-        } else {
-            logger.error(`creating database failed: ${e}`);
-        }
+        lazyHandleException(e, "creating database failed", logger);
     }
 };
 

@@ -3,7 +3,7 @@ import { AuthService } from "./../services/AuthService";
 import { Request, Response, NextFunction } from "express";
 import { penv } from "../config/penv";
 import { Middleware } from "../core/Middleware";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 
 export class AuthJwtMiddleware extends Middleware {
     private readonly authService: AuthService = new AuthService();
@@ -22,7 +22,7 @@ export class AuthJwtMiddleware extends Middleware {
 
         if (!penv.auth.jwtAuthkey) throw new Error("no JWT authkey provided");
 
-        jwt.verify(token, penv.auth.jwtAuthkey, (err, decoded) => {
+        jwt.verify(token, penv.auth.jwtAuthkey, (err: VerifyErrors | null, decoded: JwtPayload | undefined) => {
             if (err) {
                 next(ApiError.internal("token authorization failed"));
                 return;
