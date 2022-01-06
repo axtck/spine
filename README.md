@@ -19,6 +19,26 @@
 
 ---
 
+## Database structure
+
+### Entity Relationship Diagram
+
+![Entity Relationship Diagram](screenshots/entities.PNG)
+
+### Tables
+
+#### users table
+![users](screenshots/users_columns.PNG)
+
+#### roles table
+![roles](screenshots/roles_columns.PNG)
+
+#### user_roles table
+![user_roles](screenshots/user_roles_columns.PNG)
+![user_roles_fks](screenshots/user_roles_fks.PNG)
+
+---
+
 ## Development
 
 #### Database
@@ -47,4 +67,3 @@ npm run watch # start watcher
 * Follow the design pattern
 * JS / TS classes are just syntactic sugar (mind the `this` context for using class methods as middleware (bind with `bind(this)` or use `() => {}`))
 * Type as much as possible
-
