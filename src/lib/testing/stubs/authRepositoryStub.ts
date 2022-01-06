@@ -1,16 +1,15 @@
 import sinon, { SinonStubbedInstance } from "sinon";
-import { IRoleModel } from "../../../models/RoleModel";
-import { IUserModel } from "../../../models/UserModel";
 import { AuthRepository } from "../../../repositories/AuthRepository";
+import { IUser, IRole } from "../../../types";
 import { baseUsers, userRoles } from "../data/dummies";
 
-const user: IUserModel = baseUsers[0];
-const admin: IUserModel = baseUsers[1];
-const moderator: IUserModel = baseUsers[2];
+const user: IUser = baseUsers[0];
+const admin: IUser = baseUsers[1];
+const moderator: IUser = baseUsers[2];
 
-const userRole: IRoleModel = userRoles[0];
-const adminRole: IRoleModel = userRoles[1];
-const moderatorRole: IRoleModel = userRoles[2];
+const userRole: IRole = userRoles[0];
+const adminRole: IRole = userRoles[1];
+const moderatorRole: IRole = userRoles[2];
 
 // auth repository
 const authRepositoryStub: SinonStubbedInstance<AuthRepository> = sinon.createStubInstance(AuthRepository);

@@ -1,5 +1,4 @@
-import { IUserModel } from "./../models/UserModel";
-import { Id, Nullable } from "./../types";
+import { Id, IUser, Nullable } from "./../types";
 import { AuthRepository } from "./../repositories/AuthRepository";
 import { Service } from "../core/Service";
 import bcrypt from "bcryptjs";
@@ -32,8 +31,8 @@ export class AuthService extends Service {
         }
     }
 
-    public async getUserByUsername(username: string): Promise<Nullable<IUserModel>> {
-        const user: Nullable<IUserModel> = await this.authRepository.getUser(username);
+    public async getUserByUsername(username: string): Promise<Nullable<IUser>> {
+        const user: Nullable<IUser> = await this.authRepository.getUser(username);
         return user;
     }
 

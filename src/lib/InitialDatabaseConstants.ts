@@ -1,38 +1,37 @@
-import { IRoleModel } from "../models/RoleModel";
-import { IUserModel } from "../models/UserModel";
+import { IRole, IUser, UserRole } from "../types";
 
 export class InitialDatabaseConstants {
-    static readonly userRoles: IRoleModel[] = [
+    static readonly userRoles: IRole[] = [
         {
             id: 1,
-            name: "user"
+            name: UserRole.User
         },
         {
             id: 2,
-            name: "admin"
+            name: UserRole.Admin
         },
         {
             id: 3,
-            name: "moderator"
+            name: UserRole.Moderator
         }
     ];
 
-    static readonly baseUsers: IUserModel[] = [
+    static readonly baseUsers: IUser[] = [
         {
             id: 1,
-            username: "user",
+            username: UserRole.User,
             email: "user@user.com",
             password: "user"
         },
         {
             id: 2,
-            username: "admin",
+            username: UserRole.Admin,
             email: "admin@admin.com",
             password: "admin"
         },
         {
             id: 3,
-            username: "moderator",
+            username: UserRole.Moderator,
             email: "moderator@moderator.com",
             password: "moderator"
         }
