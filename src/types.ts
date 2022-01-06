@@ -35,3 +35,15 @@ export enum Environment {
 }
 
 export type Environments = `${Environment}`;
+
+export interface IUser {
+    id: number;
+    username: string;
+    email: string;
+    password: string;
+}
+
+export interface IRole {
+    id: number;
+    name: UserRole;
+}
