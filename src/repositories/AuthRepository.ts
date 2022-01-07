@@ -46,12 +46,10 @@ export class AuthRepository extends Repository {
 
     public async getUserRoleNames(userId: Id): Promise<Nullable<Array<{ name: string; }>>> {
         const getUserRolesQuery: QueryString = `
-            SELECT 
-                r.name 
-            FROM users u 
-            LEFT JOIN user_roles ur ON ur.userId = u.id
-            LEFT JOIN roles r ON r.id = ur.roleId
-            WHERE userId = ?
+            SELECT r.name 
+            FROM user_roles ur
+            INNER JOIN roles r ON r.id = ur.roleId
+            WHERE ur.userId = ? 
         `;
         const userRoles: Nullable<Array<{ name: string; }>> = await this.database.query<{ name: string; }>(getUserRolesQuery, [userId]);
         return userRoles;
