@@ -1,5 +1,5 @@
 import sinon, { SinonStubbedInstance } from "sinon";
-import { AuthRepository } from "../../../services/authentication/AuthRepository";
+import { AuthRepository } from "../../../services/auth/AuthRepository";
 import {
     dummyAdmin, dummyAdminRole, dummyModerator,
     dummyModeratorRole, dummyUser, dummyUserRole

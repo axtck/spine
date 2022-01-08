@@ -2,7 +2,7 @@ import { lazyHandleException } from "../lib/functions/exceptionHandling";
 import { Constants } from "./../Constants";
 import { UserRole } from "./../types";
 import { ApiError } from "./../lib/errors/ApiError";
-import { AuthService } from "../services/authentication/AuthService";
+import { AuthService } from "../services/auth/AuthService";
 import { Request, Response, NextFunction } from "express";
 import { Middleware } from "../core/Middleware";
 

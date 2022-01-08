@@ -40,6 +40,7 @@ export default class Server {
     }
 
     public async initDb(): Promise<void> {
+        await this.database.query("");
         await this.database.createDatabase();
     }
 }
