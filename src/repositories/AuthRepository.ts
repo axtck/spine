@@ -1,7 +1,6 @@
-import { QueryString } from "./../types";
+import { IUser, QueryString } from "./../types";
 import { Id, Nullable } from "../types";
 import { Repository } from "../core/Repository";
-import { IUserModel } from "../models/UserModel";
 
 export class AuthRepository extends Repository {
     public async createUser(username: string, email: string, password: string): Promise<void> {
@@ -39,22 +38,18 @@ export class AuthRepository extends Repository {
         return foundRole;
     }
 
-    public async getUser(username: string): Promise<Nullable<IUserModel>> {
+    public async getUser(username: string): Promise<Nullable<IUser>> {
         const getUserQuery: QueryString = "SELECT * FROM users WHERE username = ?";
-        const user: Nullable<IUserModel> = await this.database.queryOne<IUserModel>(getUserQuery, [username]);
+        const user: Nullable<IUser> = await this.database.queryOne<IUser>(getUserQuery, [username]);
         return user;
     }
 
     public async getUserRoleNames(userId: Id): Promise<Nullable<Array<{ name: string; }>>> {
         const getUserRolesQuery: QueryString = `
-            SELECT 
-                r.name 
-            FROM users u 
-            LEFT JOIN user_roles ur 
-                ON u.id = ur.userId
-            LEFT JOIN roles r 
-                ON ur.role_id = r.id
-            WHERE userId = ?
+            SELECT r.name 
+            FROM user_roles ur
+            INNER JOIN roles r ON r.id = ur.roleId
+            WHERE ur.userId = ? 
         `;
         const userRoles: Nullable<Array<{ name: string; }>> = await this.database.query<{ name: string; }>(getUserRolesQuery, [userId]);
         return userRoles;

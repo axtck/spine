@@ -23,7 +23,7 @@ export const apiErrorHandler = (err: Error, req: Request, res: Response, next: N
     // send default response
     res.status(500).json({
         message: err.message,
-        customMessage: "Something went wrong.",
+        customMessage: "something went wrong",
         name: err.name,
         stack: err.stack
     });

@@ -1,46 +1,45 @@
-import { IUserModel } from "../../../models/UserModel";
-import { IRoleModel } from "../../../models/RoleModel";
+import { IRole, IUser, UserRole } from "../../../types";
 
-export const userRoles: IRoleModel[] = [
+export const userRoles: IRole[] = [
     {
         id: 1,
-        name: "user"
+        name: UserRole.User
     },
     {
         id: 2,
-        name: "admin"
+        name: UserRole.Admin
     },
     {
         id: 3,
-        name: "moderator"
+        name: UserRole.Moderator
     }
 ];
 
-export const dummyUserRole: IRoleModel = userRoles[0];
-export const dummyAdminRole: IRoleModel = userRoles[1];
-export const dummyModeratorRole: IRoleModel = userRoles[2];
+export const dummyUserRole: IRole = userRoles[0];
+export const dummyAdminRole: IRole = userRoles[1];
+export const dummyModeratorRole: IRole = userRoles[2];
 
-export const baseUsers: IUserModel[] = [
+export const baseUsers: IUser[] = [
     {
         id: 1,
-        username: "user",
+        username: UserRole.User,
         email: "user@user.com",
         password: "user"
     },
     {
         id: 2,
-        username: "admin",
+        username: UserRole.Admin,
         email: "admin@admin.com",
         password: "admin"
     },
     {
         id: 3,
-        username: "moderator",
+        username: UserRole.Moderator,
         email: "moderator@moderator.com",
         password: "moderator"
     }
 ];
 
-export const dummyUser: IUserModel = baseUsers[0];
-export const dummyAdmin: IUserModel = baseUsers[1];
-export const dummyModerator: IUserModel = baseUsers[2];
+export const dummyUser: IUser = baseUsers[0];
+export const dummyAdmin: IUser = baseUsers[1];
+export const dummyModerator: IUser = baseUsers[2];
