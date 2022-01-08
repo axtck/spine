@@ -1,5 +1,5 @@
 import { AuthJwtMiddleware } from "./../middlewares/AuthJwtMiddleware";
-import { UserService } from "../services/UserService";
+import { UserService } from "../services/user/UserService";
 import { Request, Response } from "express";
 import { Controller } from "../core/Controller";
 import { IControllerRoute } from "../core/types";

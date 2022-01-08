@@ -1,5 +1,5 @@
 import { lazyHandleException } from "../../functions/exceptionHandling";
-import { Logger } from "./../../../core/Logger";
+import { Logger } from "../../../core/Logger";
 import mysql, { Connection } from "mysql2/promise";
 import { executeSqlFromFile } from "./dbHelpers";
 import path from "path";

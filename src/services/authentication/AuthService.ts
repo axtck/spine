@@ -1,6 +1,6 @@
-import { Id, IUser, Nullable } from "./../types";
-import { AuthRepository } from "./../repositories/AuthRepository";
-import { Service } from "../core/Service";
+import { Id, IUser, Nullable } from "../../types";
+import { AuthRepository } from "./AuthRepository";
+import { Service } from "../../core/Service";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 

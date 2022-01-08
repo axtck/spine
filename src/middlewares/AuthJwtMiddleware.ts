@@ -1,5 +1,5 @@
 import { ApiError } from "./../lib/errors/ApiError";
-import { AuthService } from "./../services/AuthService";
+import { AuthService } from "../services/authentication/AuthService";
 import { Request, Response, NextFunction } from "express";
 import { penv } from "../config/penv";
 import { Middleware } from "../core/Middleware";

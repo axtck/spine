@@ -1,5 +1,3 @@
-// root types
-
 export interface IInsertResponse {
     warningStatus: number,
     serverStatus: number,

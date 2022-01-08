@@ -1,10 +1,10 @@
-import { AuthService } from "./../AuthService";
+import { AuthService } from "../AuthService";
 import sinon from "sinon";
-import { authRepositoryStub } from "../../lib/testing/stubs/authRepositoryStub";
+import { authRepositoryStub } from "../../../lib/testing/stubs/authRepositoryStub";
 import {
     dummyUser, dummyAdmin, dummyModerator,
     dummyUserRole, dummyAdminRole, dummyModeratorRole
-} from "../../lib/testing/data/dummies";
+} from "../../../lib/testing/data/dummies";
 
 
 describe("AuthService", () => {

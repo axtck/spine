@@ -1,6 +1,6 @@
-import { IUser, QueryString } from "./../types";
-import { Id, Nullable } from "../types";
-import { Repository } from "../core/Repository";
+import { IUser, QueryString } from "../../types";
+import { Id, Nullable } from "../../types";
+import { Repository } from "../../core/Repository";
 
 export class AuthRepository extends Repository {
     public async createUser(username: string, email: string, password: string): Promise<void> {

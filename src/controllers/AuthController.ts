@@ -1,5 +1,5 @@
 import { VerifySignupMiddleware } from "./../middlewares/VerifySignupMiddleware";
-import { AuthService } from "../services/AuthService";
+import { AuthService } from "../services/authentication/AuthService";
 import { NextFunction, Request, Response } from "express";
 import { Controller } from "../core/Controller";
 import { IControllerRoute } from "../core/types";

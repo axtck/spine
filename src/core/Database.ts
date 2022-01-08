@@ -1,6 +1,5 @@
 import { lazyHandleException } from "../lib/functions/exceptionHandling";
-import { createDatabaseIfNotExists } from "../lib/data/helpers/initializeDatabase";
-import { createInitialTables } from "../lib/data/helpers/initializeDatabase";
+import { createDatabaseIfNotExists, createInitialTables } from "../lib/database/helpers/initializeDatabase";
 import { Logger } from "./Logger";
 import { Nullable } from "./../types";
 import mysql, { Pool } from "mysql2/promise";
