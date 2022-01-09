@@ -8,6 +8,7 @@
     "lint": "eslint . --ext .ts",
     "build": "rimraf ./dist && npx tsc",
     "watch": "npx tsc --watch",
+    "compose": "docker-compose build --no-cache && docker compose up",
     "test": "jest"
   },
   "keywords": [],

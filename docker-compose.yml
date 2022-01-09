@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  # --- DATABASE
+  mysql-main:
+    image: mysql:8
+    container_name: "mysql-main"
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+      # - MYSQL_DATABASE=${NODE_ENV}db
+    ports:
+      - "${COMPOSE_MYSQL_PORT}:3306"
+    volumes:
+      - ./docker/volumes/mysql-main:/var/lib/mysql
+
+  # --- SERVER
+  server-main:
+    container_name: "server-main"
+    depends_on:
+      - mysql-main
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - HOST_SERVER_PORT=${HOST_SERVER_PORT}
+      - NODE_ENV=${NODE_ENV}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_PORT=3306
+      - JWT_AUTHKEY=${JWT_AUTHKEY}
+    ports:
+      - ${HOST_SERVER_PORT}:${DOCKER_SERVER_PORT}
+    stdin_open: true
+    tty: true
