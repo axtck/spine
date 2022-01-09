@@ -13,8 +13,9 @@ RUN npm ci
 # bundle src
 COPY . .
 
-# expose port
-EXPOSE 5001
+# expose port passed in as arg, default to 5001
+ARG PORT=5001
+EXPOSE $PORT
 
 # start server
 CMD npm start
