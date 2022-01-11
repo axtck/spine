@@ -8,7 +8,7 @@ if (process.env.NODE_ENV && !Object.values<string>(Environment).includes(process
 const environement: string = process.env.NODE_ENV || "development";
 export const penv = {
     app: {
-        port: Number(process.env.PORT) || 3001,
+        port: Number(process.env.HOST_SERVER_PORT) || 3001,
         environment: environement
     },
     db: {
