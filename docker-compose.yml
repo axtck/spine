@@ -9,9 +9,10 @@ services:
     restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
-      # - MYSQL_DATABASE=${NODE_ENV}db
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
     ports:
-      - "${COMPOSE_MYSQL_PORT}:3306"
+      - ${COMPOSE_MYSQL_PORT}:3306
     volumes:
       - ./docker/volumes/mysql-main:/var/lib/mysql
 
@@ -19,19 +20,23 @@ services:
   server-main:
     container_name: "server-main"
     depends_on:
-      - mysql-main
+      mysql-main:
+        condition: service_healthy
     build:
+      args:
+        - PORT=${DOCKER_SERVER_PORT} # port to expose
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
-      - HOST_SERVER_PORT=${HOST_SERVER_PORT}
+      - HOST_SERVER_PORT=${DOCKER_SERVER_PORT} # docker is host (inside container)
       - NODE_ENV=${NODE_ENV}
+      - MYSQL_HOST=mysql-main # mysql-main docker container is mysql host
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_PORT=3306
       - JWT_AUTHKEY=${JWT_AUTHKEY}
     ports:
-      - ${HOST_SERVER_PORT}:${DOCKER_SERVER_PORT}
+      - ${HOST_SERVER_PORT}:${DOCKER_SERVER_PORT} # map to outside container
     stdin_open: true
     tty: true

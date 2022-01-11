@@ -7,15 +7,19 @@ WORKDIR /usr/src/app
 # copy package.json & package.lock.json
 COPY package*.json ./
 
+# try to get a port via build-arg and check 
+ARG PORT 
+RUN test -n "$PORT" || (echo "PORT not set" && false)
+
 # install dependencies
 RUN npm ci 
 
 # bundle src
 COPY . .
 
-# expose port passed in as arg, default to 5001
-ARG PORT=5001
+# expose port
 EXPOSE $PORT
+RUN echo "exposed port $PORT"
 
 # start server
 CMD npm start
