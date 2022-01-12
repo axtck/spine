@@ -13,6 +13,7 @@
 - **Logging**: Winston
 - **Testing**: Jest
 - **Mocking**: Sinon
+- **Debugging**: VSCode Run and Debug
 - **Linting**: ESLint
 - **Authentication method**: JWT
 - **Design pattern**: Repository-Service-Controller
@@ -46,7 +47,7 @@
 > ```docker run -d --name mysql-spine -v $HOME/dockervols/mysql-spine:/var/lib/mysql/ -e MYSQL_ROOT_PASSWORD=admin --restart unless-stopped -p 3307:3306 mysql:8 --default-authentication-plugin=mysql_native_password```
 
 #### Environment variables
-* Copy the `.sample.env` file in `./` and rename it as `.env` and change the variables where needed. 
+* Copy the `.env.sample` file in `./` and rename it as `.env` and change the variables where needed. 
 * The ENV variables are mapped in `./src/config/penv.ts` so they are easy to use throughout the code.
 
 #### Scripts
