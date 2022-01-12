@@ -76,9 +76,9 @@ npm run watch # start watcher
 
 ### Docker Compose
 
-For development purposes, Docker Compose is fully set up and works out of the box. Take a look at the `docker-compose.yml` file in `./` and change it to your needs.
+For development purposes, Docker Compose is fully set up and works out of the box. Take a look at the `docker-compose.yml` file in `./` and change it to your needs. Make sure your `.env` file is correctly filled in (see steps above).
 
-To run the Docker Compose environment, run `npm run compose`.
+To run the Docker Compose environment run `npm run compose`.
 
 ### DevOps
 
