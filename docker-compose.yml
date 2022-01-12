@@ -10,8 +10,10 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
     healthcheck:
-      # checks if database is ready ($ escapes $)
-      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      # checks if database is ready
+      test: mysqladmin ping -h 127.0.0.1 -u ${MYSQL_USER} --password=${MYSQL_PASSWORD}
+      timeout: 20s
+      retries: 5
     ports:
       - ${COMPOSE_MYSQL_PORT}:3306
     volumes:
