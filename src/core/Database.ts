@@ -1,5 +1,5 @@
 import { lazyHandleException } from "../lib/functions/exceptionHandling";
-import { createDatabaseIfNotExists, createInitialTables } from "../lib/database/helpers/initializeDatabase";
+import { createDatabaseIfNotExists } from "../lib/database/createDatabaseIfNotExists";
 import { Logger } from "./Logger";
 import { Nullable } from "./../types";
 import mysql, { Pool } from "mysql2/promise";
@@ -47,8 +47,6 @@ export class Database {
     }
 
     public async createDatabase(): Promise<void> {
-        const createResult: void | { exists: boolean; } = await createDatabaseIfNotExists(penv.db.mysqlDb);
-        if (createResult && createResult.exists) return;
-        await createInitialTables(); // if database didn't exist yet, create tables
+        await createDatabaseIfNotExists();
     }
 }
