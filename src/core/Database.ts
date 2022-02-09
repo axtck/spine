@@ -1,9 +1,9 @@
+import { createPoolConnection } from "./../lib/database/createConnections";
 import { lazyHandleException } from "../lib/functions/exceptionHandling";
 import { createDatabaseIfNotExists } from "../lib/database/createDatabaseIfNotExists";
 import { Logger } from "./Logger";
 import { Nullable } from "./../types";
-import mysql, { Pool } from "mysql2/promise";
-import { penv } from "../config/penv";
+import { Pool } from "mysql2/promise";
 import { DbQueryResult } from "./types";
 
 export class Database {
@@ -13,22 +13,11 @@ export class Database {
         this.logger = new Logger();
     }
 
-    private createPool(): Pool {
-        const pool = mysql.createPool({
-            host: penv.db.mysqlHost,
-            port: penv.db.mysqlPort,
-            user: penv.db.mysqlUser,
-            password: penv.db.mysqlPw,
-            database: penv.db.mysqlDb
-        });
-        return pool;
-    }
-
     public async query<T>(sql: string, parameters?: Array<string | number>): Promise<Nullable<DbQueryResult<T[]>>> {
         try {
             this.logger.info(`executing query: ${sql}${parameters ? `\noptions: ${JSON.stringify(parameters)}` : ""}`);
 
-            const pool: Pool = this.createPool();
+            const pool: Pool = await createPoolConnection();
             const [result] = await pool.query<DbQueryResult<T[]>>(sql, parameters);
 
             if (!result || !result.length) return null;

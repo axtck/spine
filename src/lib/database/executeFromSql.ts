@@ -1,4 +1,4 @@
-import { multipleStatementsConnection } from "./createConnections";
+import { createMultipleStatementsConnection } from "./createConnections";
 import { lazyHandleException } from "../functions/exceptionHandling";
 import { Connection } from "mysql2/promise";
 import { Logger } from "../../core/Logger";
@@ -7,7 +7,7 @@ import fs from "fs";
 export const executeSqlFromFile = async (sqlFilePath: string): Promise<void> => {
     const logger: Logger = new Logger();
     try {
-        const connection: Connection = await multipleStatementsConnection();
+        const connection: Connection = await createMultipleStatementsConnection();
         const extension: string | undefined = sqlFilePath.split(".").pop();
         if (!extension || extension !== "sql") throw new Error("file should have '.sql' extension");
 

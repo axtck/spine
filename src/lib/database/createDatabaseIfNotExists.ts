@@ -1,4 +1,4 @@
-import { noDatabaseSelectedConnection } from "./createConnections";
+import { createNoDatabaseSelectedConnection } from "./createConnections";
 import { lazyHandleException } from "../functions/exceptionHandling";
 import { Logger } from "../../core/Logger";
 import { Connection } from "mysql2/promise";
@@ -11,7 +11,7 @@ export const createDatabaseIfNotExists = async (): Promise<void> => {
     const logger: Logger = new Logger();
     const dbName: string = penv.db.mysqlDb;
     try {
-        const connection: Connection = await noDatabaseSelectedConnection();
+        const connection: Connection = await createNoDatabaseSelectedConnection();
         const [dbs] = await connection.execute<DbQueryResult<unknown[]>>(`SHOW DATABASES LIKE '${penv.db.mysqlDb}'`);
 
         if (dbs && dbs.length) {
