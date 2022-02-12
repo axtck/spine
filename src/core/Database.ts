@@ -1,5 +1,4 @@
-import { createPoolConnection } from "./../lib/database/createConnections";
-import { lazyHandleException } from "../lib/functions/exceptionHandling";
+import { upgradeDatabase } from "./../lib/database/upgrade";
 import { createDatabaseIfNotExists } from "../lib/database/createDatabaseIfNotExists";
 import { Logger } from "./Logger";
 import { Nullable } from "./../types";
@@ -7,25 +6,16 @@ import { Pool } from "mysql2/promise";
 import { DbQueryResult } from "./types";
 
 export class Database {
-    private readonly logger: Logger;
-
-    constructor() {
-        this.logger = new Logger();
+    private readonly pool: Pool;
+    constructor(pool: Pool,
+        private readonly logger: Logger = new Logger()) {
+        this.pool = pool;
     }
 
-    public async query<T>(sql: string, parameters?: Array<string | number>): Promise<Nullable<DbQueryResult<T[]>>> {
-        try {
-            this.logger.info(`executing query: ${sql}${parameters ? `\noptions: ${JSON.stringify(parameters)}` : ""}`);
-
-            const pool: Pool = await createPoolConnection();
-            const [result] = await pool.query<DbQueryResult<T[]>>(sql, parameters);
-
-            if (!result || !result.length) return null;
-            return result;
-        } catch (e) {
-            lazyHandleException(e, "executing query failed", this.logger);
-            return null;
-        }
+    public async query<T>(sql: string, parameters?: Array<string | number | unknown>): Promise<DbQueryResult<T[]>> {
+        this.logger.info(`executing query: ${sql}${parameters ? `\noptions: ${JSON.stringify(parameters)}` : ""}`);
+        const [result] = await this.pool.query<DbQueryResult<T[]>>(sql, parameters);
+        return result;
     }
 
     public async queryOne<T>(sql: string, parameters?: Array<string | number>): Promise<Nullable<T>> {
@@ -37,5 +27,9 @@ export class Database {
 
     public async createDatabase(): Promise<void> {
         await createDatabaseIfNotExists();
+    }
+
+    public async runMigrations(migrationsFolderPath: string, database: Database): Promise<void> {
+        await upgradeDatabase(migrationsFolderPath, database);
     }
 }
