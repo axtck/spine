@@ -1,3 +1,5 @@
+import { createPoolConnection } from "./../../../lib/database/createConnections";
+import { Pool } from "mysql2/promise";
 import { AuthService } from "../AuthService";
 import sinon from "sinon";
 import { authRepositoryStub } from "../../../lib/testing/stubs/authRepositoryStub";
@@ -9,7 +11,8 @@ import {
 
 describe("AuthService", () => {
     describe("assignRoles", () => {
-        const authService: AuthService = new AuthService(authRepositoryStub);
+        const pool: Pool = createPoolConnection();
+        const authService: AuthService = new AuthService(pool, authRepositoryStub);
 
         it("should assign user role (user role specified)", async () => {
             await authService.assignRoles(dummyUser.username, [dummyUserRole.name]);

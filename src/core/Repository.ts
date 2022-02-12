@@ -1,12 +1,10 @@
+import { Pool } from "mysql2/promise";
 import { Logger } from "./Logger";
 import { Database } from "./Database";
 
 export abstract class Repository {
-    protected readonly logger: Logger;
-    protected readonly database: Database;
-
-    constructor() {
-        this.logger = new Logger();
-        this.database = new Database();
+    constructor(pool: Pool,
+        protected readonly logger: Logger = new Logger(),
+        protected readonly database: Database = new Database(pool)) {
     }
 }

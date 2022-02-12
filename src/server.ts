@@ -1,3 +1,4 @@
+import { createPoolConnection } from "./lib/database/createConnections";
 import express, { Application, RequestHandler } from "express";
 import Server from "./core/Server";
 import { Logger } from "./core/Logger";
@@ -9,9 +10,12 @@ import { lazyHandleException } from "./lib/functions/exceptionHandling";
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
+import path from "path";
+import { Pool } from "mysql2/promise";
 
 const app: Application = express();
-const server: Server = new Server(app);
+const pool: Pool = createPoolConnection();
+const server: Server = new Server(app, pool);
 const logger: Logger = new Logger();
 
 const globalMiddleWares: RequestHandler[] = [
@@ -25,11 +29,11 @@ const globalMiddleWares: RequestHandler[] = [
 ];
 
 const controllers: Controller[] = [
-    new AuthController(),
-    new UserController()
+    new AuthController(pool),
+    new UserController(pool)
 ];
 
-server.initDb().then(() => {
+server.initDatabase(path.join(__dirname, "migrations")).then(() => {
     server.listEnv();
     server.loadGlobalMiddlewares(globalMiddleWares);
     server.loadControllers("/api/v1", controllers);

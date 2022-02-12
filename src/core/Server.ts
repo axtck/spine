@@ -1,18 +1,18 @@
+import { Pool } from "mysql2/promise";
 import { Database } from "./Database";
 import { Application, RequestHandler } from "express";
 import { Controller } from "./Controller";
 import { Logger } from "./Logger";
-import http from "http";
 import { penv } from "../config/penv";
+import http from "http";
 
 export default class Server {
     private readonly app: Application;
-    private readonly database: Database;
-    private readonly logger: Logger;
 
-    constructor(app: Application) {
-        this.database = new Database();
-        this.logger = new Logger();
+    constructor(app: Application,
+        pool: Pool,
+        private readonly database: Database = new Database(pool),
+        private readonly logger: Logger = new Logger()) {
         this.app = app;
     }
 
@@ -39,7 +39,8 @@ export default class Server {
         this.logger.debug(`environment variables: ${JSON.stringify(penv)}`);
     }
 
-    public async initDb(): Promise<void> {
+    public async initDatabase(migrationsFolderPath: string): Promise<void> {
         await this.database.createDatabase();
+        await this.database.runMigrations(migrationsFolderPath, this.database);
     }
 }

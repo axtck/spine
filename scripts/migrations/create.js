@@ -18,7 +18,7 @@ const create = async () => {
 
         // create migration name
         const parsedArgv = parseArgv();
-        const migrationName = createName(parsedArgv.name);
+        const migrationName = createFileName(parsedArgv.name);
 
         // write migration
         const migrationPath = join(migrationsFolder, migrationName);
@@ -32,8 +32,8 @@ const create = async () => {
 
 const parseArgv = () => {
     const args = minimist(process.argv.slice(2), {
-        string: "name", // --name=somemigration | --name somemigration
-        alias: { n: "name" } // --n=somemigration | --n somemigration
+        string: "name",
+        alias: { n: "name" }
     });
 
     // arg validation
@@ -52,7 +52,7 @@ const parseArgv = () => {
     };
 };
 
-const createName = (name) => {
+const createFileName = (name) => {
     const timestamp = new Date().getTime();
     const migrationFileName = `${timestamp}_${name}.ts`;
     return migrationFileName;

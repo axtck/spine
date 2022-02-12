@@ -1,3 +1,4 @@
+import { Pool } from "mysql2/promise";
 import { ApiError } from "./../lib/errors/ApiError";
 import { AuthService } from "../services/auth/AuthService";
 import { Request, Response, NextFunction } from "express";
@@ -6,10 +7,9 @@ import { Middleware } from "../core/Middleware";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 export class AuthJwtMiddleware extends Middleware {
-    private readonly authService: AuthService = new AuthService();
-
-    constructor() {
-        super();
+    constructor(pool: Pool,
+        private readonly authService: AuthService = new AuthService(pool)) {
+        super(pool);
     }
 
     public verifyToken(req: Request, res: Response, next: NextFunction): Response | void {

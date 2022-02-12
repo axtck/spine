@@ -14,13 +14,13 @@ export const createDatabaseIfNotExists = async (): Promise<void> => {
         const connection: Connection = await createNoDatabaseSelectedConnection();
         const [dbs] = await connection.execute<DbQueryResult<unknown[]>>(`SHOW DATABASES LIKE '${penv.db.mysqlDb}'`);
 
-        if (dbs && dbs.length) {
-            logger.debug(`database '${penv.db.mysqlDb}' not created (exists)`);
+        if (dbs?.length) {
+            logger.info(`database '${penv.db.mysqlDb}' not created (exists)`);
             return;
         }
 
         await connection.query(`CREATE DATABASE IF NOT EXISTS ${dbName}`);
-        logger.debug(`created database '${dbName}'`);
+        logger.info(`created database '${dbName}'`);
 
         const sqlFilePath: string = path.join(__dirname, "..", "..", "..", "database", "createInitialTables.sql");
         await executeSqlFromFile(sqlFilePath);

@@ -1,3 +1,4 @@
+import { Pool } from "mysql2/promise";
 import { Id, IUser, Nullable } from "../../types";
 import { AuthRepository } from "./AuthRepository";
 import { Service } from "../../core/Service";
@@ -5,8 +6,9 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export class AuthService extends Service {
-    constructor(private readonly authRepository: AuthRepository = new AuthRepository()) {
-        super();
+    constructor(pool: Pool,
+        private readonly authRepository: AuthRepository = new AuthRepository(pool)) {
+        super(pool);
     }
 
     public async createUser(username: string, email: string, password: string): Promise<void> {

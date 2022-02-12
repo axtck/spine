@@ -25,7 +25,7 @@ export const createMultipleStatementsConnection = async (): Promise<Connection> 
     return connection;
 };
 
-export const createPoolConnection = async (): Promise<Pool> => {
+export const createPoolConnection = (): Pool => {
     // pool
     const pool: Pool = mysql.createPool({
         host: penv.db.mysqlHost,
