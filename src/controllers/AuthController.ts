@@ -1,3 +1,4 @@
+import { Pool } from "mysql2/promise";
 import { VerifySignupMiddleware } from "./../middlewares/VerifySignupMiddleware";
 import { AuthService } from "../services/auth/AuthService";
 import { NextFunction, Request, Response } from "express";
@@ -10,7 +11,6 @@ import { ILoginResponse } from "./types";
 
 export class AuthController extends Controller {
     public path = "/auth";
-    private readonly verifySignupMiddleware: VerifySignupMiddleware = new VerifySignupMiddleware();
     protected readonly routes: IControllerRoute[] = [
         {
             path: "/signup",
@@ -29,8 +29,10 @@ export class AuthController extends Controller {
         }
     ];
 
-    constructor(private readonly authService: AuthService = new AuthService()) {
-        super();
+    constructor(pool: Pool,
+        private readonly authService: AuthService = new AuthService(pool),
+        private readonly verifySignupMiddleware: VerifySignupMiddleware = new VerifySignupMiddleware(pool)) {
+        super(pool);
     }
 
     public async handleSignup(req: Request, res: Response, next: NextFunction): Promise<void> {

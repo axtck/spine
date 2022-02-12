@@ -1,3 +1,4 @@
+import { Pool } from "mysql2/promise";
 import { AuthJwtMiddleware } from "./../middlewares/AuthJwtMiddleware";
 import { UserService } from "../services/user/UserService";
 import { Request, Response } from "express";
@@ -7,7 +8,6 @@ import { HttpMethod } from "../types";
 
 export class UserController extends Controller {
     public path = "/content";
-    private readonly authJwtMiddleware: AuthJwtMiddleware = new AuthJwtMiddleware();
     protected readonly routes: IControllerRoute[] = [
         {
             path: "/all",
@@ -43,8 +43,10 @@ export class UserController extends Controller {
         }
     ];
 
-    constructor(private readonly userService: UserService = new UserService()) {
-        super();
+    constructor(pool: Pool,
+        private readonly userService: UserService = new UserService(pool),
+        private readonly authJwtMiddleware: AuthJwtMiddleware = new AuthJwtMiddleware(pool)) {
+        super(pool);
     }
 
     public async handleAllContent(req: Request, res: Response): Promise<void> {

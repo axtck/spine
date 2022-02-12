@@ -1,42 +1,21 @@
-import { lazyHandleException } from "../lib/functions/exceptionHandling";
-import { createDatabaseIfNotExists, createInitialTables } from "../lib/database/helpers/initializeDatabase";
+import { upgradeDatabase } from "./../lib/database/upgrade";
+import { createDatabaseIfNotExists } from "../lib/database/createDatabaseIfNotExists";
 import { Logger } from "./Logger";
 import { Nullable } from "./../types";
-import mysql, { Pool } from "mysql2/promise";
-import { penv } from "../config/penv";
+import { Pool } from "mysql2/promise";
 import { DbQueryResult } from "./types";
 
 export class Database {
-    private readonly logger: Logger;
-
-    constructor() {
-        this.logger = new Logger();
+    private readonly pool: Pool;
+    constructor(pool: Pool,
+        private readonly logger: Logger = new Logger()) {
+        this.pool = pool;
     }
 
-    private createPool(): Pool {
-        const pool = mysql.createPool({
-            host: penv.db.mysqlHost,
-            port: penv.db.mysqlPort,
-            user: penv.db.mysqlUser,
-            password: penv.db.mysqlPw,
-            database: penv.db.mysqlDb
-        });
-        return pool;
-    }
-
-    public async query<T>(sql: string, parameters?: Array<string | number>): Promise<Nullable<DbQueryResult<T[]>>> {
-        try {
-            this.logger.info(`executing query: ${sql}${parameters ? `\noptions: ${JSON.stringify(parameters)}` : ""}`);
-
-            const pool: Pool = this.createPool();
-            const [result] = await pool.query<DbQueryResult<T[]>>(sql, parameters);
-
-            if (!result || !result.length) return null;
-            return result;
-        } catch (e) {
-            lazyHandleException(e, "executing query failed", this.logger);
-            return null;
-        }
+    public async query<T>(sql: string, parameters?: Array<string | number | unknown>): Promise<DbQueryResult<T[]>> {
+        this.logger.info(`executing query: ${sql}${parameters ? `\noptions: ${JSON.stringify(parameters)}` : ""}`);
+        const [result] = await this.pool.query<DbQueryResult<T[]>>(sql, parameters);
+        return result;
     }
 
     public async queryOne<T>(sql: string, parameters?: Array<string | number>): Promise<Nullable<T>> {
@@ -47,8 +26,10 @@ export class Database {
     }
 
     public async createDatabase(): Promise<void> {
-        const createResult: void | { exists: boolean; } = await createDatabaseIfNotExists(penv.db.mysqlDb);
-        if (createResult && createResult.exists) return;
-        await createInitialTables(); // if database didn't exist yet, create tables
+        await createDatabaseIfNotExists();
+    }
+
+    public async runMigrations(migrationsFolderPath: string, database: Database): Promise<void> {
+        await upgradeDatabase(migrationsFolderPath, database);
     }
 }

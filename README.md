@@ -41,6 +41,20 @@
 
 ---
 
+### Migrations
+
+Create a new migration.
+
+```bash
+npm run migration:create -- --name=x
+```
+
+If you are using Powershell, you might encounter problems, call the script directly.
+
+```bash
+node scripts/migrations/create --name=x
+```
+
 ## Development
 
 #### Database

@@ -1,15 +1,15 @@
+import { Pool } from "mysql2/promise";
 import { ApiError } from "./../lib/errors/ApiError";
 import { AuthService } from "../services/auth/AuthService";
 import { Request, Response, NextFunction } from "express";
 import { penv } from "../config/penv";
 import { Middleware } from "../core/Middleware";
-import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 export class AuthJwtMiddleware extends Middleware {
-    private readonly authService: AuthService = new AuthService();
-
-    constructor() {
-        super();
+    constructor(pool: Pool,
+        private readonly authService: AuthService = new AuthService(pool)) {
+        super(pool);
     }
 
     public verifyToken(req: Request, res: Response, next: NextFunction): Response | void {
@@ -22,20 +22,19 @@ export class AuthJwtMiddleware extends Middleware {
 
         if (!penv.auth.jwtAuthkey) throw new Error("no JWT authkey provided");
 
-        jwt.verify(token, penv.auth.jwtAuthkey, (err: VerifyErrors | null, decoded: JwtPayload | undefined) => {
-            if (err) {
-                next(ApiError.internal("token authorization failed"));
-                return;
-            }
-
-            if (!decoded) {
+        try {
+            const decoded: string | JwtPayload = jwt.verify(token, penv.auth.jwtAuthkey);
+            if (!decoded || typeof decoded === "string") {
                 next(ApiError.internal("decoding token failed"));
                 return;
             }
 
             req.id = decoded.id;
             next();
-        });
+        } catch (e) {
+            next(ApiError.internal(`token authorization failed: ${e}`));
+            return;
+        }
     }
 
     private authenticateRole(id: number, userRoleNames: string[], role: string, next: NextFunction): void {
