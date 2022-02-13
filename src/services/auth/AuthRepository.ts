@@ -69,7 +69,7 @@ export class AuthRepository extends Repository {
     }
 
     public async getDuplicateEmailId(email: string): Promise<Nullable<{ id: Id; }>> {
-        const getDuplicateQuery: QueryString = "SELECT id FROM users WHERE username = ?";
+        const getDuplicateQuery: QueryString = "SELECT id FROM users WHERE email = ?";
         const duplicateUserId = await this.database.queryOne<{ id: Id; }>(getDuplicateQuery, [email]);
         return duplicateUserId;
     }

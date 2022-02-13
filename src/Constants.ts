@@ -1,4 +1,4 @@
-import { UserRole } from "./types";
+import { Environment, UserRole } from "./types";
 // constants
 export class Constants {
     static readonly logLevels = {
@@ -19,5 +19,9 @@ export class Constants {
 
     static readonly userRoles: UserRole[] = [
         UserRole.User, UserRole.Admin, UserRole.Moderator
+    ];
+
+    static readonly environments: Environment[] = [
+        Environment.Development, Environment.Test, Environment.Staging, Environment.Production
     ];
 }

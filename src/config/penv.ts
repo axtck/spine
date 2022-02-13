@@ -1,8 +1,9 @@
+import { Constants } from "./../Constants";
 require("dotenv").config();
 import { Environment } from "./../types";
 
-if (process.env.NODE_ENV && !Object.values<string>(Environment).includes(process.env.NODE_ENV)) {
-    throw new Error(`environment '${process.env.NODE_ENV}' invalid, possible environments: undefined (development) / development / staging / production`);
+if (process.env.NODE_ENV && !Constants.environments.includes(process.env.NODE_ENV as Environment)) {
+    throw new Error(`environment '${process.env.NODE_ENV}' invalid, possible environments: undefined (development) / development / test / staging / production`);
 }
 
 const environement: string = process.env.NODE_ENV || "development";

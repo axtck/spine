@@ -1,4 +1,3 @@
-import { Database } from "./../core/Database";
 import { Logger } from "./../core/Logger";
 import { VerifySignupMiddleware } from "./../middlewares/VerifySignupMiddleware";
 import { AuthService } from "../services/auth/AuthService";
@@ -17,8 +16,8 @@ export class AuthController extends Controller {
     private readonly authService: AuthService;
     private readonly verifySignupMiddleware: VerifySignupMiddleware;
 
-    constructor(logger: Logger, database: Database, authService: AuthService, verifySignupMiddleware: VerifySignupMiddleware) {
-        super(logger, database);
+    constructor(logger: Logger, authService: AuthService, verifySignupMiddleware: VerifySignupMiddleware) {
+        super(logger);
         this.authService = authService;
         this.verifySignupMiddleware = verifySignupMiddleware;
     }

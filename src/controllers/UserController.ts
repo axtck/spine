@@ -1,5 +1,4 @@
 import { Logger } from "./../core/Logger";
-import { Database } from "./../core/Database";
 import { AuthJwtMiddleware } from "./../middlewares/AuthJwtMiddleware";
 import { UserService } from "../services/user/UserService";
 import { Request, Response } from "express";
@@ -14,8 +13,8 @@ export class UserController extends Controller {
     private readonly userService: UserService;
     private readonly authJwtMiddleware: AuthJwtMiddleware;
 
-    constructor(logger: Logger, database: Database, userService: UserService, authJwtMiddleware: AuthJwtMiddleware) {
-        super(logger, database);
+    constructor(logger: Logger, userService: UserService, authJwtMiddleware: AuthJwtMiddleware) {
+        super(logger);
         this.userService = userService;
         this.authJwtMiddleware = authJwtMiddleware;
     }
