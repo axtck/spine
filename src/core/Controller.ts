@@ -2,17 +2,15 @@ import { Logger } from "./Logger";
 import { Response, Router } from "express";
 import { HttpMethod } from "../types";
 import { IControllerRoute } from "./types";
-import { Database } from "./Database";
 
 export abstract class Controller {
-    public router: Router = Router();
+    public router: Router;
     public abstract path: string;
     protected abstract readonly routes: IControllerRoute[];
     protected readonly logger: Logger;
-    protected readonly database: Database;
 
-    constructor(logger: Logger, database: Database) {
-        this.database = database;
+    constructor(logger: Logger) {
+        this.router = Router();
         this.logger = logger;
     }
 

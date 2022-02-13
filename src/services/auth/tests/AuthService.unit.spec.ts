@@ -1,4 +1,5 @@
-import { Database } from "./../../../core/Database";
+import "reflect-metadata";
+import { container } from "tsyringe";
 import { Logger } from "./../../../core/Logger";
 import { AuthService } from "../AuthService";
 import sinon from "sinon";
@@ -11,9 +12,8 @@ import {
 
 describe("AuthService", () => {
     describe("assignRoles", () => {
-        const logger: Logger = new Logger();
-        const database: Database = new Database(logger);
-        const authService: AuthService = new AuthService(logger, database, authRepositoryStub);
+        const logger: Logger = container.resolve(Logger);
+        const authService: AuthService = new AuthService(logger, authRepositoryStub);
 
         it("should assign user role (user role specified)", async () => {
             await authService.assignRoles(dummyUser.username, [dummyUserRole.name]);

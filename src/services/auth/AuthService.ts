@@ -1,18 +1,17 @@
-import { Database } from "./../../core/Database";
 import { Logger } from "./../../core/Logger";
 import { Id, IUser, Nullable } from "../../types";
 import { AuthRepository } from "./AuthRepository";
 import { Service } from "../../core/Service";
+import { injectable } from "tsyringe";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { injectable } from "tsyringe";
 
 @injectable()
 export class AuthService extends Service {
     private readonly authRepository: AuthRepository;
 
-    constructor(logger: Logger, database: Database, authRepository: AuthRepository) {
-        super(logger, database);
+    constructor(logger: Logger, authRepository: AuthRepository) {
+        super(logger);
         this.authRepository = authRepository;
     }
 
