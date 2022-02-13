@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { container } from "tsyringe";
-import { Logger } from "./../../../core/Logger";
+import { Logger } from "../../../core/Logger";
 import { AuthService } from "../AuthService";
 import sinon from "sinon";
 import { authRepositoryStub } from "../../../lib/testing/stubs/authRepositoryStub";

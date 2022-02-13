@@ -22,13 +22,13 @@ export class AuthService extends Service {
 
     public async assignRoles(username: string, roles: Nullable<string[]>): Promise<void> {
         // get created user
-        const createdUserId: Nullable<{ id: Id; }> = await this.authRepository.getCreatedUserId(username);
-        if (!createdUserId) throw new Error("finding created user failed");
+        const createdUserId: Nullable<{ id: Id; }> = await this.authRepository.getCreatedUserIdByUsername(username);
+        if (!createdUserId) throw new Error(`finding created user '${username}' failed`);
 
         // assign roles
         if (roles) {
             for (const r of roles) {
-                const role = await this.authRepository.getRole(r);
+                const role: Nullable<{ id: Id; }> = await this.authRepository.getRoleByName(r);
                 if (!role) throw new Error("finding role failed");
                 await this.authRepository.createUserRole(createdUserId.id, role.id);
             }
@@ -38,7 +38,7 @@ export class AuthService extends Service {
     }
 
     public async getUserByUsername(username: string): Promise<Nullable<IUser>> {
-        const user: Nullable<IUser> = await this.authRepository.getUser(username);
+        const user: Nullable<IUser> = await this.authRepository.getUserByUsername(username);
         return user;
     }
 
@@ -62,19 +62,19 @@ export class AuthService extends Service {
     }
 
     public async getUserRoleNames(userId: Id): Promise<string[]> {
-        const userRoles: Nullable<Array<{ name: string; }>> = await this.authRepository.getUserRoleNames(userId);
+        const userRoles: Array<{ name: string; }> = await this.authRepository.getUserRoleNamesByUserId(userId);
         if (!userRoles || !userRoles.length) throw new Error(`no roles found for user with id '${userId}'`);
         const roleNames: string[] = userRoles.map(r => r.name);
         return roleNames;
     }
 
     public async getDuplicateUsernameId(username: string): Promise<Nullable<{ id: Id; }>> {
-        const duplicateUserId: Nullable<{ id: Id; }> = await this.authRepository.getDuplicateUsernameId(username);
+        const duplicateUserId: Nullable<{ id: Id; }> = await this.authRepository.getUserIdByUsername(username);
         return duplicateUserId;
     }
 
     public async getDuplicateEmailId(email: string): Promise<Nullable<{ id: Id; }>> {
-        const duplicateUserId: Nullable<{ id: Id; }> = await this.authRepository.getDuplicateEmailId(email);
+        const duplicateUserId: Nullable<{ id: Id; }> = await this.authRepository.getIdByEmail(email);
         return duplicateUserId;
     }
 }
