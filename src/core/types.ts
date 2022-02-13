@@ -4,11 +4,6 @@ import { HttpMethod } from "../types";
 
 export type LogMessageTypes = string | number | Record<string, unknown> | unknown;
 
-export interface IPerson {
-    name: string;
-    id: number;
-}
-
 export type DbDefaults = RowDataPacket[] | RowDataPacket[][] | OkPacket[] | OkPacket;
 export type DbQueryResult<T> = T & DbDefaults;
 

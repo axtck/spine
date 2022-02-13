@@ -1,12 +1,3 @@
-export interface IInsertResponse {
-    warningStatus: number,
-    serverStatus: number,
-    insertId: number,
-    info: string,
-    fieldCount: number,
-    affectedRows: number;
-}
-
 export type Id = number;
 
 export type QueryString = string;
@@ -36,13 +27,13 @@ export enum Environment {
 export type Environments = `${Environment}`;
 
 export interface IUser {
-    id: number;
+    id: Id;
     username: string;
     email: string;
     password: string;
 }
 
 export interface IRole {
-    id: number;
+    id: Id;
     name: UserRole;
 }

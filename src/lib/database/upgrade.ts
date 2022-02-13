@@ -6,7 +6,7 @@ import { IMigrationFile, IMigrationFileInfo, CreationStatus } from "./types";
 import { Logger } from "../../core/Logger";
 import path from "path";
 
-export const upgradeDatabase = async (migrationsFolderPath: string, database: Database): Promise<void> => {
+export const runMigrations = async (migrationsFolderPath: string, database: Database): Promise<void> => {
     const logger: Logger = new Logger();
     try {
         // create migrations table

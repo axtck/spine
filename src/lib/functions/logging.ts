@@ -1,3 +1,4 @@
+import { SqlLog } from "./types";
 export const transformKeyValueJSON = (jsonData: unknown): string => {
     // split
     const splitRegex = new RegExp(/,"/);
@@ -19,4 +20,15 @@ export const validateParameters = (sql: string, parameters: Array<string | numbe
     const nOptions = parameters.length; // count options
 
     return count === nOptions;
+};
+
+export const createSqlLog = (sql: string, parameters?: unknown[]): SqlLog => {
+    const trimmed: string = sql.replace(/\n/g, "").replace(/\s+/g, " ").trim();
+
+    const log: SqlLog = {
+        sql: trimmed,
+        parameters: parameters || []
+    };
+
+    return log;
 };

@@ -1,10 +1,10 @@
-import { Logger } from "./../core/Logger";
-import { AuthJwtMiddleware } from "./../middlewares/AuthJwtMiddleware";
-import { UserService } from "../services/user/UserService";
+import { Logger } from "../../core/Logger";
+import { AuthJwtMiddleware } from "../../middlewares/AuthJwtMiddleware";
+import { UserService } from "../../controllers/user/UserService";
 import { Request, Response } from "express";
-import { Controller } from "../core/Controller";
-import { IControllerRoute } from "../core/types";
-import { HttpMethod } from "../types";
+import { Controller } from "../../core/Controller";
+import { IControllerRoute } from "../../core/types";
+import { HttpMethod } from "../../types";
 import { injectable } from "tsyringe";
 
 @injectable()
@@ -21,7 +21,6 @@ export class UserController extends Controller {
 
     public async handleAllContent(req: Request, res: Response): Promise<void> {
         this.sendSuccess(res, undefined, "All content.");
-        this.authJwtMiddleware.verifyToken;
     }
 
     public async handleUserContent(req: Request, res: Response): Promise<void> {

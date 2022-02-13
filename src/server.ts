@@ -4,8 +4,8 @@ import Server from "./core/Server";
 import { Database } from "./core/Database";
 import { Logger } from "./core/Logger";
 import { Controller } from "./core/Controller";
-import { AuthController } from "./controllers/AuthController";
-import { UserController } from "./controllers/UserController";
+import { AuthController } from "./controllers/auth/AuthController";
+import { UserController } from "./controllers/user/UserController";
 import { apiErrorHandler } from "./middlewares/apiErrorHandler";
 import { lazyHandleException } from "./lib/functions/exceptionHandling";
 import { container } from "tsyringe";
@@ -38,7 +38,7 @@ server.initDatabase(path.join(__dirname, "migrations")).then(() => {
     server.listEnv();
     server.loadGlobalMiddlewares(globalMiddleWares);
     server.loadControllers("/api/v1", controllers);
-    app.use(apiErrorHandler);
+    server.loadErrorHandlingMiddleware(apiErrorHandler);
     server.listen();
 }).catch((e: unknown) => {
     lazyHandleException(e, "initializing database failed", logger);

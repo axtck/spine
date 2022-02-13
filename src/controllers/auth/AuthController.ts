@@ -1,13 +1,13 @@
-import { Logger } from "./../core/Logger";
-import { VerifySignupMiddleware } from "./../middlewares/VerifySignupMiddleware";
-import { AuthService } from "../services/auth/AuthService";
+import { Logger } from "../../core/Logger";
+import { VerifySignupMiddleware } from "../../middlewares/VerifySignupMiddleware";
+import { AuthService } from "../../controllers/auth/AuthService";
 import { NextFunction, Request, Response } from "express";
-import { Controller } from "../core/Controller";
-import { IControllerRoute } from "../core/types";
-import { HttpMethod, IUser, Nullable } from "../types";
-import { ApiError } from "../lib/errors/ApiError";
-import { penv } from "../config/penv";
-import { ILoginResponse } from "./types";
+import { Controller } from "../../core/Controller";
+import { IControllerRoute } from "../../core/types";
+import { HttpMethod, IUser, Nullable } from "../../types";
+import { ApiError } from "../../lib/errors/ApiError";
+import { penv } from "../../config/penv";
+import { ILoginResponse } from "../types";
 import { injectable } from "tsyringe";
 
 @injectable()
@@ -52,8 +52,8 @@ export class AuthController extends Controller {
                 return;
             }
 
-            const token = this.authService.signToken(user.id, penv.auth.jwtAuthkey);
-            const userRoles = await this.authService.getUserRoleNames(user.id);
+            const token: unknown = this.authService.signToken(user.id, penv.auth.jwtAuthkey);
+            const userRoles: string[] = await this.authService.getUserRoleNames(user.id);
 
             const loginResponse: ILoginResponse = {
                 id: user.id,

@@ -1,5 +1,5 @@
 import { Database } from "./Database";
-import { Application, RequestHandler } from "express";
+import { Application, ErrorRequestHandler, RequestHandler } from "express";
 import { Controller } from "./Controller";
 import { Logger } from "./Logger";
 import { penv } from "../config/penv";
@@ -35,12 +35,16 @@ export default class Server {
         }
     }
 
+    public loadErrorHandlingMiddleware(errorHandlingMiddleware: ErrorRequestHandler): void {
+        this.app.use(errorHandlingMiddleware);
+    }
+
     public listEnv(): void {
         this.logger.debug(`environment variables: ${JSON.stringify(penv)}`);
     }
 
     public async initDatabase(migrationsFolderPath: string): Promise<void> {
-        await this.database.createDatabase();
+        await this.database.createDatabaseIfNotExists();
         await this.database.runMigrations(migrationsFolderPath, this.database);
     }
 }
