@@ -6,18 +6,18 @@ import { AuthService } from "../controllers/auth/AuthService";
 import { Request, Response, NextFunction } from "express";
 import { Middleware } from "../core/Middleware";
 import { Logger } from "../core/Logger";
-import { Database } from "../core/Database";
 import { injectable } from "tsyringe";
 
 @injectable()
 export class VerifySignupMiddleware extends Middleware {
     private readonly authService: AuthService;
-    constructor(logger: Logger, database: Database, authService: AuthService) {
-        super(logger, database);
+    constructor(logger: Logger, authService: AuthService) {
+        super(logger);
         this.authService = authService;
     }
 
     public checkDuplicateUsernameOrEmail = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        this.logger.info("test");
         try {
             const duplicateUsername = await this.authService.getDuplicateUsernameId(req.body.username);
             if (duplicateUsername) {
@@ -37,7 +37,7 @@ export class VerifySignupMiddleware extends Middleware {
         }
     };
 
-    public checkRolesExisted(req: Request, res: Response, next: NextFunction): void {
+    public checkRolesExisted = (req: Request, res: Response, next: NextFunction): void => {
         const roleNames: UserRole[] = Constants.userRoles;
         if (req.body.roles?.length) {
             for (const role of req.body.roles) {
@@ -49,5 +49,5 @@ export class VerifySignupMiddleware extends Middleware {
         }
 
         next();
-    }
+    };
 }
