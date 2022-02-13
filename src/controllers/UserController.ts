@@ -1,56 +1,28 @@
-import { Pool } from "mysql2/promise";
+import { Logger } from "./../core/Logger";
+import { Database } from "./../core/Database";
 import { AuthJwtMiddleware } from "./../middlewares/AuthJwtMiddleware";
 import { UserService } from "../services/user/UserService";
 import { Request, Response } from "express";
 import { Controller } from "../core/Controller";
 import { IControllerRoute } from "../core/types";
 import { HttpMethod } from "../types";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class UserController extends Controller {
     public path = "/content";
-    protected readonly routes: IControllerRoute[] = [
-        {
-            path: "/all",
-            method: HttpMethod.Get,
-            handler: this.handleAllContent.bind(this),
-            localMiddleware: []
-        },
-        {
-            path: "/user",
-            method: HttpMethod.Get,
-            handler: this.handleUserContent.bind(this),
-            localMiddleware: [
-                this.authJwtMiddleware.verifyToken
-            ]
-        },
-        {
-            path: "/admin",
-            method: HttpMethod.Get,
-            handler: this.handleAdminContent.bind(this),
-            localMiddleware: [
-                this.authJwtMiddleware.verifyToken,
-                this.authJwtMiddleware.isAdmin
-            ]
-        },
-        {
-            path: "/moderator",
-            method: HttpMethod.Get,
-            handler: this.handleModeratorContent.bind(this),
-            localMiddleware: [
-                this.authJwtMiddleware.verifyToken,
-                this.authJwtMiddleware.isModerator
-            ]
-        }
-    ];
+    private readonly userService: UserService;
+    private readonly authJwtMiddleware: AuthJwtMiddleware;
 
-    constructor(pool: Pool,
-        private readonly userService: UserService = new UserService(pool),
-        private readonly authJwtMiddleware: AuthJwtMiddleware = new AuthJwtMiddleware(pool)) {
-        super(pool);
+    constructor(logger: Logger, database: Database, userService: UserService, authJwtMiddleware: AuthJwtMiddleware) {
+        super(logger, database);
+        this.userService = userService;
+        this.authJwtMiddleware = authJwtMiddleware;
     }
 
     public async handleAllContent(req: Request, res: Response): Promise<void> {
         this.sendSuccess(res, undefined, "All content.");
+        this.authJwtMiddleware.verifyToken;
     }
 
     public async handleUserContent(req: Request, res: Response): Promise<void> {
@@ -63,5 +35,44 @@ export class UserController extends Controller {
 
     public async handleModeratorContent(req: Request, res: Response): Promise<void> {
         this.sendSuccess(res, undefined, "Moderator content.");
+    }
+
+    protected get routes(): IControllerRoute[] {
+        const routes: IControllerRoute[] = [
+            {
+                path: "/all",
+                method: HttpMethod.Get,
+                handler: this.handleAllContent.bind(this),
+                localMiddleware: []
+            },
+            {
+                path: "/user",
+                method: HttpMethod.Get,
+                handler: this.handleUserContent.bind(this),
+                localMiddleware: [
+                    this.authJwtMiddleware.verifyToken
+                ]
+            },
+            {
+                path: "/admin",
+                method: HttpMethod.Get,
+                handler: this.handleAdminContent.bind(this),
+                localMiddleware: [
+                    this.authJwtMiddleware.verifyToken,
+                    this.authJwtMiddleware.isAdmin
+                ]
+            },
+            {
+                path: "/moderator",
+                method: HttpMethod.Get,
+                handler: this.handleModeratorContent.bind(this),
+                localMiddleware: [
+                    this.authJwtMiddleware.verifyToken,
+                    this.authJwtMiddleware.isModerator
+                ]
+            }
+        ];
+
+        return routes;
     }
 }

@@ -1,4 +1,3 @@
-import { Pool } from "mysql2/promise";
 import { Logger } from "./Logger";
 import { Response, Router } from "express";
 import { HttpMethod } from "../types";
@@ -9,10 +8,12 @@ export abstract class Controller {
     public router: Router = Router();
     public abstract path: string;
     protected abstract readonly routes: IControllerRoute[];
+    protected readonly logger: Logger;
+    protected readonly database: Database;
 
-    constructor(pool: Pool,
-        protected readonly logger: Logger = new Logger(),
-        protected readonly database: Database = new Database(pool)) {
+    constructor(logger: Logger, database: Database) {
+        this.database = database;
+        this.logger = logger;
     }
 
     public setRoutes(): Router {

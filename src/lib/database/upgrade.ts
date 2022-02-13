@@ -13,8 +13,14 @@ export const upgradeDatabase = async (migrationsFolderPath: string, database: Da
         const createTableStatus: CreationStatus = await createMigrationsTable(database);
         if (createTableStatus === CreationStatus.Exists) logger.info("migrations table not created (exists)");
 
-        // get migrations
-        const files: string[] = await readdir(migrationsFolderPath);
+        let files: string[];
+        try {
+            // get migrations
+            files = await readdir(migrationsFolderPath);
+        } catch {
+            logger.info("no migrations to run");
+            return;
+        }
         const compiledMigrationFiles: string[] = files.filter((f) => f.split(".")[f.split(".").length - 1] === "js");
         const migrationsToRun: string[] = await getMigrationsToRun(database, compiledMigrationFiles);
         if (!migrationsToRun || !migrationsToRun.length) {

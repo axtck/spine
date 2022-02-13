@@ -1,4 +1,3 @@
-import { Pool } from "mysql2/promise";
 import { Database } from "./Database";
 import { Application, RequestHandler } from "express";
 import { Controller } from "./Controller";
@@ -7,13 +6,14 @@ import { penv } from "../config/penv";
 import http from "http";
 
 export default class Server {
+    private readonly logger: Logger;
     private readonly app: Application;
+    private readonly database: Database;
 
-    constructor(app: Application,
-        pool: Pool,
-        private readonly database: Database = new Database(pool),
-        private readonly logger: Logger = new Logger()) {
+    constructor(logger: Logger, app: Application, database: Database) {
+        this.logger = logger;
         this.app = app;
+        this.database = database;
     }
 
     public listen(): http.Server {

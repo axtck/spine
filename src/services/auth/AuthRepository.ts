@@ -1,8 +1,15 @@
+import { Database } from "./../../core/Database";
 import { IUser, QueryString } from "../../types";
 import { Id, Nullable } from "../../types";
 import { Repository } from "../../core/Repository";
+import { injectable } from "tsyringe";
+import { Logger } from "../../core/Logger";
 
+@injectable()
 export class AuthRepository extends Repository {
+    constructor(logger: Logger, database: Database) {
+        super(logger, database);
+    }
     public async createUser(username: string, email: string, password: string): Promise<void> {
         const createUserQuery: QueryString = `
             INSERT INTO users (
