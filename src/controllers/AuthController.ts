@@ -1,4 +1,5 @@
-import { Pool } from "mysql2/promise";
+import { Database } from "./../core/Database";
+import { Logger } from "./../core/Logger";
 import { VerifySignupMiddleware } from "./../middlewares/VerifySignupMiddleware";
 import { AuthService } from "../services/auth/AuthService";
 import { NextFunction, Request, Response } from "express";
@@ -8,31 +9,18 @@ import { HttpMethod, IUser, Nullable } from "../types";
 import { ApiError } from "../lib/errors/ApiError";
 import { penv } from "../config/penv";
 import { ILoginResponse } from "./types";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class AuthController extends Controller {
     public path = "/auth";
-    protected readonly routes: IControllerRoute[] = [
-        {
-            path: "/signup",
-            method: HttpMethod.Post,
-            handler: this.handleSignup.bind(this),
-            localMiddleware: [
-                this.verifySignupMiddleware.checkDuplicateUsernameOrEmail,
-                this.verifySignupMiddleware.checkRolesExisted
-            ]
-        },
-        {
-            path: "/login",
-            method: HttpMethod.Post,
-            handler: this.handleLogin.bind(this),
-            localMiddleware: []
-        }
-    ];
+    private readonly authService: AuthService;
+    private readonly verifySignupMiddleware: VerifySignupMiddleware;
 
-    constructor(pool: Pool,
-        private readonly authService: AuthService = new AuthService(pool),
-        private readonly verifySignupMiddleware: VerifySignupMiddleware = new VerifySignupMiddleware(pool)) {
-        super(pool);
+    constructor(logger: Logger, database: Database, authService: AuthService, verifySignupMiddleware: VerifySignupMiddleware) {
+        super(logger, database);
+        this.authService = authService;
+        this.verifySignupMiddleware = verifySignupMiddleware;
     }
 
     public async handleSignup(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -85,5 +73,27 @@ export class AuthController extends Controller {
             next(ApiError.internal(`login failed: ${e}`));
             return;
         }
+    }
+
+    protected get routes(): IControllerRoute[] {
+        const routes: IControllerRoute[] = [
+            {
+                path: "/signup",
+                method: HttpMethod.Post,
+                handler: this.handleSignup.bind(this),
+                localMiddleware: [
+                    this.verifySignupMiddleware.checkDuplicateUsernameOrEmail,
+                    this.verifySignupMiddleware.checkRolesExisted
+                ]
+            },
+            {
+                path: "/login",
+                method: HttpMethod.Post,
+                handler: this.handleLogin.bind(this),
+                localMiddleware: []
+            }
+        ];
+
+        return routes;
     }
 }

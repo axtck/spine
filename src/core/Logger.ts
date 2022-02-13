@@ -1,10 +1,12 @@
 import { Environment } from "./../types";
 import { LogMessageTypes } from "./types";
-import winston from "winston";
 import { penv } from "../config/penv";
 import { Constants } from "../Constants";
+import { injectable } from "tsyringe";
+import winston from "winston";
 import path from "path";
 
+@injectable()
 export class Logger {
     private levels = Constants.logLevels;
     private colors = Constants.logColors;

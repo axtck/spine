@@ -1,15 +1,20 @@
+import { createPoolConnection } from "./../lib/database/createConnections";
 import { upgradeDatabase } from "./../lib/database/upgrade";
 import { createDatabaseIfNotExists } from "../lib/database/createDatabaseIfNotExists";
 import { Logger } from "./Logger";
 import { Nullable } from "./../types";
 import { Pool } from "mysql2/promise";
 import { DbQueryResult } from "./types";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class Database {
     private readonly pool: Pool;
-    constructor(pool: Pool,
-        private readonly logger: Logger = new Logger()) {
-        this.pool = pool;
+    private readonly logger: Logger;
+
+    constructor(logger: Logger) {
+        this.pool = createPoolConnection();
+        this.logger = logger;
     }
 
     public async query<T>(sql: string, parameters?: Array<string | number | unknown>): Promise<DbQueryResult<T[]>> {

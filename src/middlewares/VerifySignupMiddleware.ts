@@ -1,4 +1,3 @@
-import { Pool } from "mysql2/promise";
 import { lazyHandleException } from "../lib/functions/exceptionHandling";
 import { Constants } from "./../Constants";
 import { UserRole } from "./../types";
@@ -6,11 +5,16 @@ import { ApiError } from "./../lib/errors/ApiError";
 import { AuthService } from "../services/auth/AuthService";
 import { Request, Response, NextFunction } from "express";
 import { Middleware } from "../core/Middleware";
+import { Logger } from "../core/Logger";
+import { Database } from "../core/Database";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class VerifySignupMiddleware extends Middleware {
-    constructor(pool: Pool,
-        private readonly authService: AuthService = new AuthService(pool)) {
-        super(pool);
+    private readonly authService: AuthService;
+    constructor(logger: Logger, database: Database, authService: AuthService) {
+        super(logger, database);
+        this.authService = authService;
     }
 
     public checkDuplicateUsernameOrEmail = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
