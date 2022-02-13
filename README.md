@@ -14,10 +14,12 @@
 - **Testing**: Jest
 - **Mocking**: Sinon
 - **Debugging**: VSCode Run and Debug
-- **Linting**: ESLint
+- **Dependency Injection**: Tsyringe
+- **Decorators**: Reflect-metadata
+- **Containerization**: Docker
 - **Authentication method**: JWT
 - **Design pattern**: Repository-Service-Controller
-- **Containerization**: Docker
+- **Linting**: ESLint
 
 ---
 
@@ -39,8 +41,6 @@
 ![user_roles](screenshots/user_roles_columns.PNG)
 ![user_roles_fks](screenshots/user_roles_fks.PNG)
 
----
-
 ### Migrations
 
 Create a new migration.
@@ -54,6 +54,8 @@ If you are using Powershell, you might encounter problems, call the script direc
 ```bash
 node scripts/migrations/create --name=x
 ```
+
+---
 
 ## Development
 
