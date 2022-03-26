@@ -18,7 +18,7 @@ export class Database {
         this.logger = logger;
     }
 
-    public async query<T>(sql: string, parameters?: unknown[]): Promise<DbQueryResult<T[]>> {
+    public async query<T>(sql: string, parameters?: unknown[]): Promise<T[]> {
         this.logger.info(`executing query: ${JSON.stringify(createSqlLog(sql, parameters))}}`);
         const [result] = await this.pool.query<DbQueryResult<T[]>>(sql, parameters);
         return result;
